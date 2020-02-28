@@ -14,6 +14,7 @@ try
 %--------------------------------------------------------------------------  
     startTrialTime = GetSecs;
     stopSignal = 0;
+    stim.trial = trial;
     
     % find out what is the next disparity
     psi = Psi_marg_erds6('value',trial, psi, expe, scr);
@@ -222,16 +223,16 @@ try
                     end
                  
               %draw half of the dots with dotColor1
-                   Screen('DrawDots', scr.w, coordLeftL(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordLeftR(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordRightL(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordRightR(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordLeftL(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordLeftR(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordRightL(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordRightR(:,1:round(stim.nbDots/2),frame), stim.dotsizes(1:round(stim.nbDots/2)), sc(stim.dotColor1,scr),[],3,0);
 % 
 %             %draw half of the dots with dotColor2
-                   Screen('DrawDots', scr.w, coordLeftL(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordLeftR(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordRightL(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
-                   Screen('DrawDots', scr.w, coordRightR(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordLeftL(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordLeftR(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordRightL(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
+                   ScreenDrawDots( scr.w, coordRightR(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],3,0);
        
                 %-----fixation
                 %  drawDichFixation(scr,stim);

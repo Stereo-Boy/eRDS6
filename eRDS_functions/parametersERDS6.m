@@ -73,11 +73,6 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.VA2pxConstant=scr.ppBymm *10*VA2cm(1,scr.distFromScreen); %constant by which we multiply a value in VA to get a value in px ?
         scr.dispByPx = 3600./scr.VA2pxConstant; %disparity (arcsec) by pixel when in one eye
         %careful: if you have 1px of disparity for each eye (not just one), the above disparity by pixel should be multiplied by two
-        scr.backgr=15; %in cd/m2
-        scr.keyboardNum=-1; % all available keyboards
-        scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
-        scr.fontSize  = 30;
-        Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency
         
      %now defines centers of screen and centers of stereo screens
      %Caution has to be taken because the screen origin for DrawLine and
@@ -100,6 +95,16 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.LcenterXDot=ceil(scr.centerX-scr.stereoDeviation); %stereo position of left eye center
         scr.RcenterXDot=ceil(scr.centerX+scr.stereoDeviation); %stereo position of right eye center
         scr.centerYDot=ceil(scr.centerY); %stereo position of left eye center
+        
+        
+        scr.backgr=15; %in cd/m2
+        scr.keyboardNum=-1; % all available keyboards
+       % scr.rectwindow = [scr.LcenterXLine-stim.frameWidth/2,scr.LcenterYLine-stim.frameHeight/2,scr.LcenterXLine+stim.frameWidth/2,scr.LcenterYLine+stim.frameHeight/2];
+
+        scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
+        scr.fontSize  = 30;
+        Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency
+        
            
      %    scr.frameTime =Screen('GetFlipInterval', scr.w, 2);
        %   scr.frameTime = 1/60; %CHANGE HERE
@@ -141,19 +146,23 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
 %         
 
          % RDS dots        
-         stim.dotSizeVA = 0.50;        % apparent size for a dot in visual angle (can be a list of dot sizes)
-         % 0.5 VA is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
-         % 0.03 VA is optimal for participant without strabismus
+         stim.dotSizeVA = 0.22;        
+         % size for a dot in visual angle (can be a list of dot sizes)
+         % Ideally it would be:
+         % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
+         % 0.03 VA, which is is optimal for participant without strabismus
+         % However, drawDots does not support the large size
          %stim.densityXsize = 1800; % constant size (in arcsec) x density (in dots by VA2)
          %stim.dotDensity_VA2 = stim.densityXsize./mean(stim.dotSizeVA.*3600); % in dots per squared VA
-         stim.dotDensity = 12/100; % in % of area occupied by dots     
-         stim.speedVA_sec = 1; % in VA by sec
+         stim.dotDensity = 5/100; % in % of area occupied by dots     
+         stim.speedVA_sec = 0.7; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black
           %  if mod(stim.dotSize,2)~=1; disp('dotsize should be odd');  sca; xx; end
           %  if stim.dotSize<3; disp('dotsize should be greater than 3');  sca; xx; end
          stim.coherence = 50; %?
-         stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
+         stim.distBetwDots_min = 0; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
+         stim.maxLoadingTime = 5; %in sec, maximum calculation time allowed to find dot coordinates
          
         % RDS width and height / be sure to adapt that so that it is
         % compatible with your screen size and distance
@@ -173,7 +182,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %--------------------------------------------------------------------------
     % TIMING (All times are in MILLISECONDS)
     %--------------------------------------------------------------------------
-         stim.itemDuration = 10000;        % RDS total presentation time in ms HERE
+         stim.itemDuration = 2000;        % RDS total presentation time in ms HERE
          if stim.flash==0 && mod(stim.itemDuration,(1000*scr.frameTime))~=0; warni('Stimulus duration is not a factor of the frame duration. For precision, it could be...')
              warni('...wise (but we will round anyway) to adjust stim.itemDuration by ',mod(stim.itemDuration,(1000*scr.frameTime)),'ms'); end
          stim.flashDuration  = 250;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
@@ -204,7 +213,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
-        [~, maxSmoothPointSize, ~, maxAliasedPointSize] = Screen('DrawDots',scr.w);
+        [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;
         if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
     %--------------------------------------------------------------------------
