@@ -333,8 +333,8 @@ try
         %    Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.rightrdsR);
             
         %all of it including center space
-        %   Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
-         %  Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]);
+           Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
+           Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]);
                     
         %----- fixation
            drawDichFixation(scr,stim);
@@ -482,10 +482,10 @@ catch err   %===== DEBUGING =====%
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
-    PsychPortAudio('Close', sounds.handle1);
-    PsychPortAudio('Close', sounds.handle2);
     keyboard
     rethrow(err);
+    PsychPortAudio('Close', sounds.handle1);
+    PsychPortAudio('Close', sounds.handle2);
 end
 
 end
