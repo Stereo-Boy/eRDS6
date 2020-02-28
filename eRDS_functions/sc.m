@@ -9,5 +9,9 @@ function output=sc(lum,scr)
 % output is the 0-255 (bit) value
 
 % constraining value between 0 and 255 
-output = max(0,min(255,(lum./scr.paramOptim1).^(1/scr.paramOptim2)));
+if numel(scr)==1
+    output = max(0,min(255,(lum./scr.paramOptim1).^(1/scr.paramOptim2)));
+else
+    output = max(0,min(255,(lum./scr(1)).^(1/scr(2))));
+end
 
