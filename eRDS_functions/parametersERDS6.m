@@ -55,25 +55,27 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr = screen_parameters;
         screens=Screen('Screens');
         scr.screenNumber=max(screens);            % will certainly not function correctly in multiple screen though
-        scr.res=Screen('rect', scr.screenNumber); % screen size in pixel, format: [0 0 maxHoriz maxVert]
 
     %check that we have the appropriate resolution
         scr.oldResolution=Screen('Resolution',scr.screenNumber);
         if scr.oldResolution.width==scr.goalWidthRes && scr.oldResolution.height==scr.goalHeightRes && scr.oldResolution.hz==scr.goalRefreshRate
             disp('Resolution and refresh are correct')
+            scr.pixelSize = scr.oldResolution.pixelSize;
         else
-            changeResolution(scr.screenNumber, scr.goalWidthRes, scr.goalHeightRes, scr.goalRefreshRate);
+            scr.newResolution = changeResolution(scr.screenNumber, scr.goalWidthRes, scr.goalHeightRes, scr.goalRefreshRate);
+            scr.pixelSize = scr.newResolution.pixelSize;
         end
-            
+        scr.res=Screen('rect', scr.screenNumber); % screen size in pixel, format: [0 0 maxHoriz maxVert]
+        
      %check if vertical and horizontal pixel sizes are the same
         scr.ppBymm= scr.res(3)/scr.W;
-        if scr.res(3)/scr.W~=scr.res(4)/scr.H; warning('Ideally, change the screen resolution to have equal pixel sizes. Otherwise, vertical sizes will be incorrect');end
+        if abs((scr.res(3)/scr.W)-(scr.res(4)/scr.H))>0.05; warning('Ratio error >5%: change the screen resolution to have equal pixel sizes.');end
         scr.VA2pxConstant=scr.ppBymm *10*VA2cm(1,scr.distFromScreen); %constant by which we multiply a value in VA to get a value in px ?
         scr.dispByPx = 3600./scr.VA2pxConstant; %disparity (arcsec) by pixel when in one eye
         %careful: if you have 1px of disparity for each eye (not just one), the above disparity by pixel should be multiplied by two
         scr.backgr=15; %in cd/m2
         scr.keyboardNum=-1; % all available keyboards
-        scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], 32);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
+        scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
         scr.fontSize  = 30;
         Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency
         
@@ -202,7 +204,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
-        [minSmoothPointSize, maxSmoothPointSize, minAliasedPointSize, maxAliasedPointSize] = Screen('DrawDots',scr.w)
+        [~, ~, ~, maxAliasedPointSize] = Screen('DrawDots',scr.w);
+        scr.maxAliasedPointSize = maxAliasedPointSize;
+        if stim.dotSize>scr.maxAliasedPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxAliasedPointSize,')'); end
     %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------
@@ -271,7 +275,17 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         psi.trial = 1;
         
         precautions(scr.w, 'on');
-    
+ 
+%     SPECIAL for VIEWPIXX
+    if scr.viewpixx==1
+        Datapixx('Open');
+        Datapixx('EnableVideoScanningBacklight');
+        Datapixx('RegWrRd');
+        status = Datapixx('GetVideoStatus');
+        fprintf('Scanning Backling mode on = %d\n', status.scanningBacklight);
+        Datapixx('Close');
+    end
+
     function px=convertVA2px(VA)
         px=scr.ppBymm *10*VA2cm(VA,scr.distFromScreen); 
     end
