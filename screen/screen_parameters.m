@@ -10,7 +10,7 @@ scr.goalWidthRes = 1920;    % appropriate resolution for that experiment (width 
 scr.goalHeightRes = 1080;   % appropriate resolution for that experiment (height in px)1080 or 768
 scr.goalRefreshRate = 60;   % refresh rate
 scr.distFromScreen = 150;   % distance screen-eye through any mirror - in cm
-scr.viewpixx = 1;           % if this is a viewpixx screen (1) or not (0)
+scr.viewpixx = 0;           % if this is a viewpixx screen (1) or not (0)
 
 % You will need a photometer to determine the parameters below (exact same
 % thing as box parameter in DST8
