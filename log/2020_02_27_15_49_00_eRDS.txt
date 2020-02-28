@@ -1,0 +1,25 @@
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\DST8\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\screen
+Date and Time:	27/ 2/2020	15:49: 1
+------------------------------------
+Experimental Menu (choose an option)
+====================================
+1: Quick Mode
+2: Manual Mode (not implemented yet)
+3: Practice 2000 ms - 10 trials
+4: Test 2000 ms - 25 practice + 60 trials
+5: Test 200 ms - 25 practice + 60 trials
+6: Debug mode (not implemented yet)
+7: Robot mode
+====================================
+Your option? Enter participant's ID:  {Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('nameInput', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\nameInput.m', 4)" style="font-weight:bold">nameInput</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\nameInput.m',4,0)">line 4</a>)
+
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eRDS6b', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m', 100)" style="font-weight:bold">eRDS6b</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m',100,0)">line 100</a>)
+            expe.name=nameInput(datapath);  %erds datafile name
+} 
+eRDS6b
+ ------------    eRDS ------------------
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\log
