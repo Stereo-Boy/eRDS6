@@ -209,8 +209,8 @@ try
                     %Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.rightrdsR);
                     
                     %all of it including center space
-                 %      Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
-                 %      Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]); 
+                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
+                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]); 
                     
                     if expe.debugMode==1
                                        Screen('DrawLines',scr.w, [scr.LcenterXLine,scr.LcenterXLine,scr.LcenterXLine-3,scr.LcenterXLine-3,...
@@ -333,8 +333,8 @@ try
         %    Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.rightrdsR);
             
         %all of it including center space
-       %    Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
-       %    Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]);
+           Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2) stim.rightrdsL(3) stim.rightrdsL(4)]); 
+           Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2) stim.rightrdsR(3) stim.rightrdsR(4)]);
                     
         %----- fixation
            drawDichFixation(scr,stim);
