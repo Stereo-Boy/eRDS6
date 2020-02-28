@@ -303,17 +303,18 @@ try
 catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
+    keyboard
     disp(err)
-    save(fullfile(logpath,[expe.name,'-crashlog']))
-    if isfield(psi1,'tt')
+    if exist('scr','var'); save(fullfile(logpath,[expe.name,'-crashlog'])); end
+    if exist('psi1','var') && isfield(psi1,'tt')
                 psi1=rmfield(psi1,'tt'); psi1=rmfield(psi1,'ss'); psi1=rmfield(psi1,'ll'); psi1=rmfield(psi1,'xx');
                 psi1=rmfield(psi1,'likelihoodCR'); psi1=rmfield(psi1,'likelihoodFail'); psi1=rmfield(psi1,'postFail'); psi1=rmfield(psi1,'postCR');
     end
-    if isfield(psi2,'tt')
+    if exist('psi1','var') && isfield(psi2,'tt')
         psi2=rmfield(psi2,'tt'); psi2=rmfield(psi2,'ss'); psi2=rmfield(psi2,'ll'); psi2=rmfield(psi2,'xx');
         psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
     end
-    clear psi
+    if exist('psi','var');    clear psi; end
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
