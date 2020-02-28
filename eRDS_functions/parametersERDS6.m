@@ -67,7 +67,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
             
      %check if vertical and horizontal pixel sizes are the same
         scr.ppBymm= scr.res(3)/scr.W;
-        if scr.res(3)/scr.W~=scr.res(4)/scr.H; warnings('Ideally, change the screen resolution to have equal pixel sizes. Otherwise, vertical sizes will be incorrect',1);end
+        if scr.res(3)/scr.W~=scr.res(4)/scr.H; warning('Ideally, change the screen resolution to have equal pixel sizes. Otherwise, vertical sizes will be incorrect');end
         scr.VA2pxConstant=scr.ppBymm *10*VA2cm(1,scr.distFromScreen); %constant by which we multiply a value in VA to get a value in px ?
         scr.dispByPx = 3600./scr.VA2pxConstant; %disparity (arcsec) by pixel when in one eye
         %careful: if you have 1px of disparity for each eye (not just one), the above disparity by pixel should be multiplied by two
@@ -202,16 +202,26 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
-        
+        [minSmoothPointSize, maxSmoothPointSize, minAliasedPointSize, maxAliasedPointSize] = Screen('DrawDots',scr.w)
     %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------
-         sounds.duration = 0.2;
-         sounds.freq1 = 1000; %correct response beep
-         sounds.freq2 = 500;  %incorrect response beep
-         sounds.success = soundDefine(sounds.duration,sounds.freq1);
-         sounds.fail = soundDefine(sounds.duration,sounds.freq2);
-         
+%          sounds.duration = 0.2;
+%          sounds.freq1 = 1000; %correct response beep
+%          sounds.freq2 = 500;  %incorrect response beep
+%          sounds.success = soundDefine(sounds.duration,sounds.freq1);
+%          sounds.fail = soundDefine(sounds.duration,sounds.freq2);
+        sounds = struct();
+        [wave1, sounds.freq1] = psychwavread(fullfile(expe.soundpath,'success.wav'));
+        sounds.success = wave1';
+        [wave2, sounds.freq2] = psychwavread(fullfile(expe.soundpath,'fail.wav'));
+        sounds.fail = wave2';
+        InitializePsychSound;
+        sounds.handle1 = PsychPortAudio('Open', [], [], 0, sounds.freq1, 2);
+        sounds.handle2 = PsychPortAudio('Open', [], [], 0, sounds.freq2, 2);
+        PsychPortAudio('FillBuffer', sounds.handle1, sounds.success);
+        PsychPortAudio('FillBuffer', sounds.handle2, sounds.fail);
+        
     %--------------------------------------------------------------------------
     %   PSI algorithm parameters
     %----------------------------------------------------------------------------

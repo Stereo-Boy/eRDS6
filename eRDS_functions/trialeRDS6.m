@@ -391,15 +391,18 @@ try
             expected_key = expected_side + 1; 
              if expe.inputMode==1 
                 if (expected_key-responseKey)==0 %CORRECT
-                    play(sounds.success.obj);
+                   % play(sounds.success.obj);
+                   PsychPortAudio('Start', sounds.handle1, 1, 0, 1);
                     psi.correct = 1;
                 else
                     %UNCORRECT
                     psi.correct = 0;
                     if expe.feedback == 1 %meaningful auditory feedback
-                        play(sounds.fail.obj);
+                        %play(sounds.fail.obj);
+                        PsychPortAudio('Start', sounds.handle2, 1, 0, 1);
                     else    %keypress auditory feedback
-                        play(sounds.success.obj);
+                        PsychPortAudio('Start', sounds.handle1, 1, 0, 1);
+                        %play(sounds.success.obj);
                     end
                 end
              end
@@ -481,6 +484,8 @@ catch err   %===== DEBUGING =====%
     if exist('scr','var'); precautions(scr.w, 'off'); end
     keyboard
     rethrow(err);
+    PsychPortAudio('Close', sounds.handle1);
+    PsychPortAudio('Close', sounds.handle2);
 end
 
 end

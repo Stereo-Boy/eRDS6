@@ -10,7 +10,7 @@ function precautions(w,switcher)
 %================================
 
 %error managment, use warnings function to use this
-global errorbook 
+%global errorbook 
 
 %Screen('BlendFunction',w, 'GL_ZERO', 'GL_ZERO')
 switch switcher
@@ -36,11 +36,11 @@ switch switcher
         end
         sca
 
-        %clean the error managment
-        if numel(errorbook)>0
-            errorbook=cell(1);
-            errorbook(1,1:2)={'Date and Time' '   Error Book'};
-        end
+%         %clean the error managment
+%         if numel(errorbook)>0
+%             errorbook=cell(1);
+%             errorbook(1,1:2)={'Date and Time' '   Error Book'};
+%         end
 end
 
 end

@@ -71,6 +71,7 @@ try
     logpath = fullfile(eRDSpath,'log'); % log file path
     datapath = fullfile(eRDSpath,'dataFiles'); % path to the datafile folder
     screenpath = fullfile(eRDSpath,'screen'); % path to the screen folder 
+    expe.soundpath = fullfile(eRDSpath,'sound'); % path to the sound folder 
     check_folder(logpath,1,'verboseON');
     diary(fullfile(logpath,[sprintf('%02.f_',fix(clock)),'eRDS.txt']));
     diary ON
@@ -78,6 +79,7 @@ try
     check_folder(DSTpath,1,'verboseON');
     check_folder(datapath,1,'verboseON');
     check_folder(screenpath,1,'verboseON');
+    check_folder(expe.soundpath,1,'verboseON');
     addpath(screenpath); % so that we can load the screen parameters from there
     disp(dateTime)
     
@@ -304,6 +306,8 @@ catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
     keyboard
+    if exist('sounds','var'); PsychPortAudio('Close', sounds.handle1); end
+    if exist('sounds','var'); PsychPortAudio('Close', sounds.handle2); end
     disp(err)
     if exist('scr','var'); save(fullfile(logpath,[expe.name,'-crashlog'])); end
     if exist('psi1','var') && isfield(psi1,'tt')
@@ -318,6 +322,5 @@ catch err   %===== DEBUGING =====%
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
-    keyboard
 end
 
