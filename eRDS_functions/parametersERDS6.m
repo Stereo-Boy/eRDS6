@@ -204,9 +204,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
-        [~, ~, ~, maxAliasedPointSize] = Screen('DrawDots',scr.w);
-        scr.maxAliasedPointSize = maxAliasedPointSize;
-        if stim.dotSize>scr.maxAliasedPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxAliasedPointSize,')'); end
+        [~, maxSmoothPointSize, ~, maxAliasedPointSize] = Screen('DrawDots',scr.w);
+        scr.maxSmoothPointSize = maxSmoothPointSize;
+        if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
     %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------
@@ -287,6 +287,6 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     end
 
     function px=convertVA2px(VA)
-        px=scr.ppBymm *10*VA2cm(VA,scr.distFromScreen); 
+        px=scr.ppBymm.*10.*VA2cm(VA,scr.distFromScreen); 
     end
 end
