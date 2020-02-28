@@ -151,9 +151,9 @@ try
     %--------------------------------------------------------------------------
       check_files(DSTpath, [expe.nameDST,'.mat'], 1, 1, expe.verbose)
       dispi('Loading DST file ',expe.nameDST)
-      load(fullfile(DSTpath, [expe.nameDST,'.mat']),'leftContr','rightContr', 'leftUpShift', 'rightUpShift', 'leftLeftShift', 'rightLeftShift', 'flickering')
+      load(fullfile(DSTpath, [expe.nameDST,'.mat']),'leftContr','rightContr', 'leftUpShift', 'rightUpShift', 'leftLeftShift', 'rightLeftShift')
       expe.leftContr = leftContr; expe.rightContr =rightContr; expe.leftUpShift =leftUpShift; expe.rightUpShift =rightUpShift;
-      expe.leftLeftShift=leftLeftShift; expe.rightLeftShift=rightLeftShift; expe.flickering=flickering;
+      expe.leftLeftShift=leftLeftShift; expe.rightLeftShift=rightLeftShift;
     
      %----------------------------------------------------------------------------
      %   UPDATE LEFT AND RIGHT EYE COORDINATES AND CONTRAST from DST / initialize

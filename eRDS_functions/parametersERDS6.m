@@ -146,7 +146,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
 %         
 
          % RDS dots        
-         stim.dotSizeVA = 0.22;        
+         stim.dotSizeVA = 0.5;        
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
@@ -154,13 +154,13 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          % However, drawDots does not support the large size
          %stim.densityXsize = 1800; % constant size (in arcsec) x density (in dots by VA2)
          %stim.dotDensity_VA2 = stim.densityXsize./mean(stim.dotSizeVA.*3600); % in dots per squared VA
-         stim.dotDensity = 5/100; % in % of area occupied by dots     
-         stim.speedVA_sec = 0.7; % in VA by sec
+         stim.dotDensity = 25/100; % in % of area occupied by dots     
+         stim.speedVA_sec = 0.8; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black
           %  if mod(stim.dotSize,2)~=1; disp('dotsize should be odd');  sca; xx; end
           %  if stim.dotSize<3; disp('dotsize should be greater than 3');  sca; xx; end
-         stim.coherence = 50; %?
+         stim.coherence = 75; %?
          stim.distBetwDots_min = 0; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
          stim.maxLoadingTime = 5; %in sec, maximum calculation time allowed to find dot coordinates
          
@@ -170,7 +170,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         % the right)
          stim.rdsWidthVA = 3; %6.5 
          stim.rdsHeightVA = 7; %6.5
-         stim.rdsInterspaceVA = 0.3; %space size between RDS in VA
+         stim.rdsInterspaceVA = 0.1; %space size between RDS in VA
          
         %Large box properties (outer frame for fusion)
          stim.frameLineWidthVA = 0.3; %line width of the frames in VA
@@ -209,7 +209,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         stim.ppByFlash = ((stim.speed./1000).*stim.flashDuration); % in pp by flash 
         stim.distBetwDots = round(convertVA2px(stim.distBetwDots_min/60));
         stim.dotSize = round(convertVA2px(stim.dotSizeVA)); % in pp
-        if mod(stim.dotSize,2)~=0; disp('Correcting: stim.dotSize should be even - removing 1pp');  stim.dotSize=stim.dotSize-1; end
+        %if mod(stim.dotSize,2)~=0; disp('Correcting: stim.dotSize should be even - removing 1pp');  stim.dotSize=stim.dotSize-1; end
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end

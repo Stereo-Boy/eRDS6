@@ -27,8 +27,9 @@ max_hdot_size = max(round(stim.dotsizes/2));
 
 % We generate a grid of possible coordinates, without including coordinates
 % close to the border, that would generate out-of-limits dots for sure
- [xArea, yArea] = meshgrid(round((max_hdot_size+max(0,disparity/2))):round(widthpp-max_hdot_size-max(0,disparity/2)), max_hdot_size:(heightpp-max_hdot_size));
- xAreaLine=xArea(:); yAreaLine = yArea(:);
+% [xArea, yArea] = meshgrid(round((max_hdot_size+max(0,disparity/2))):round(widthpp-max_hdot_size-max(0,disparity/2)), max_hdot_size:(heightpp-max_hdot_size));
+ [xArea, yArea] = meshgrid(max_hdot_size:round(widthpp-max_hdot_size), max_hdot_size:(heightpp-max_hdot_size));
+xAreaLine=xArea(:); yAreaLine = yArea(:);
  sizeXY = numel(xAreaLine);
 
 % if it is initialization of the first dots
@@ -89,8 +90,8 @@ try
         %possibleDots = Shuffle(1:sizeXY); nextDot = 1;
         for i=1:size(coordL,2)
             distance1 = sqrt((coordL(1,:)-coordL(1,i)).^2+(coordL(2,:)-coordL(2,i)).^2);
-           % distance2 = sqrt((coordR(1,:)-coordR(1,i)).^2+(coordR(2,:)-coordR(2,i)).^2);
-            if sum(distance1<min_distance)>1 %|| sum(distance2<stim.distBetwDots)>1
+            distance2 = sqrt((coordR(1,:)-coordR(1,i)).^2+(coordR(2,:)-coordR(2,i)).^2);
+            if sum(distance1<min_distance)>1 || sum(distance2<min_distance)>1
                 overlap = 1;
                 pastOverlap = 1;  
                 chosenDots =  round(rand(1).*sizeXY);
