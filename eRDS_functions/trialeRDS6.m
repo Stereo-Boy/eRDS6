@@ -34,10 +34,6 @@ try
 %im2=nan(50,50,3,11); %subpixel
 %for jjj=1:10 %subpixel
    expected_side = round(rand(1)); % 0: left side closer - 1: right side closer
-   
-   expected_side = 0 %HERE
-psi.sign = 'near'
-
    if strcmp(psi.sign, 'near')
         signed_disp = -10.^psi.current_disp;
         if expected_side == 0
@@ -120,12 +116,9 @@ psi.sign = 'near'
                 stim.directions(randsample(stim.nbDots,stim.nbCoherentDots,0))=rand(1).*2*pi;
 
               % initiate left RDS dots coordinates
-                % Note that we reduce the size of each side by the
-                % disparity of the other side because disparities create
-                % some out-of-limits dots that are removed (and replaced)
-                % which results in a bigger exclusion area for the side
-                % with the larger disparity (of the size difference = to the disparity
-                % difference)
+                % Note that we reduce the size of each side by the disparity of the other side because disparities create
+                % some out-of-limits dots that are removed (and replaced) which results in a bigger exclusion area for the side
+                % with the larger disparity (of the size difference = to the disparity difference)
                 [coordLeftL, coordLeftR] = generateRDSStereoCoord([],[],stim,stim.leftrdsL(4)-stim.leftrdsL(2), stim.leftrdsL(3)-stim.leftrdsL(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1));                   
                 %now generates all the dots coordinates for each frame
                 for fram=2:expe.nbFrames
@@ -141,9 +134,9 @@ psi.sign = 'near'
             
             % recenter coordinates according to the first pixel of the
             % screen (atm, in coordinates relative to background rect)
-             % we add an horizontal jitter to the zero disparity side to avoid the use of monocular cues
-             % the jitter is all or nothing thing, of the size of the
-             % disparity on the other side. One side has zero jitter because of the zero disparity (on the other side)
+             % Note that we add an horizontal jitter to the zero disparity side to avoid the use of monocular cues
+             % the jitter is all or nothing thing, of the size of the disparity on the other side. One side has zero 
+             % jitter because of the zero disparity (on the other side)
              xjitter1 = round(rand(1)).*abs(L_R_disp_pp(1)); 
              xjitter2 = round(rand(1)).*abs(L_R_disp_pp(2)); 
              coordLeftL(1,:,:) = coordLeftL(1,:,:) + stim.leftrdsL(1) + xjitter2;
