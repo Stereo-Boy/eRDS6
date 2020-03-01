@@ -146,7 +146,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
 %         
 
          % RDS dots        
-         stim.dotSizeVA = [0.5, 0.2];     
+         stim.dotSizeVA = [0.5, 0.1];     
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
@@ -185,10 +185,10 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.itemDuration = 2000;        % RDS total presentation time in ms HERE
          if stim.flash==0 && mod(stim.itemDuration,(1000*scr.frameTime))~=0; warni('Stimulus duration is not a factor of the frame duration. For precision, it could be...')
              warni('...wise (but we will round anyway) to adjust stim.itemDuration by ',mod(stim.itemDuration,(1000*scr.frameTime)),'ms'); end
-         stim.flashDuration  = 200;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
+         stim.flashDuration  = 400;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
          if mod(stim.itemDuration,stim.flashDuration)~=0; warni('Stimulus duration is not a factor of flash duration. For precision, it could be...')
              warni('...wise to adjust stim.itemDuration by ',mod(stim.itemDuration,stim.flashDuration),'ms'); end
-         stim.interTrial   = 50;           % Minimal ISI in ms
+         stim.interTrial   = 0;           % Minimal ISI in ms
        % stim.frameTime = scr.frameTime;  
     %--------------------------------------------------------------------------   
 
@@ -216,7 +216,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;
         %HERE
-        scr.antialliasingMode = 3;
+        scr.antialliasingMode = 2;
         %if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
         scr.lenient = 1; %HERE
         %--------------------------------------------------------------------------
