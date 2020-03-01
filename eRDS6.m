@@ -239,12 +239,19 @@ try
      
      %---- RDS SPACE             
         %defines space to be drawn inside with dots
-            %stim.bgRectL = centerSizedAreaOnPx(scr.LcenterXLine, scr.LcenterYLine, 2*stim.rdsWidth+stim.rdsInterspace, stim.rdsHeight);
-            %stim.bgRectR = centerSizedAreaOnPx(scr.RcenterXLine,scr.RcenterYLine,stim.rdsWidth,stim.rdsHeight);
             stim.leftrdsL = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight);
             stim.leftrdsR = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);
             stim.rightrdsL = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight);
             stim.rightrdsR = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);
+            % split the working area in two areas vertically, one will show large dots, the other small dots
+            stim.leftrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.leftrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.rightrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.rightrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.leftrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.leftrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.rightrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+            stim.rightrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             
      %=====================================================================
      %               START THE STIMULUS PRESENTATION
@@ -262,7 +269,6 @@ try
                    else
                         [expe, psi2, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi2);
                    end
-               %save('temp.mat') % just in case something goes really wrong
                if stopSignal==1; break; end
            end         
                                    
@@ -294,7 +300,6 @@ try
             else
                 save(fullfile(datapath,expe.name))
             end
-            %saveAll(fullfile(datapath,[expe.name,'.mat']),fullfile(datapath,[expe.name,'.txt']))
 
         %===== QUIT =====%
             precautions(scr.w, 'off');

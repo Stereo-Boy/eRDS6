@@ -102,10 +102,10 @@ try
 %                 if numel(stim.nbDots,2)>1 && mod(stim.nbDots,1)==1; stim.nbDots = stim.nbDots+1; end
                   stim.areaSizepp1 = (stim.leftrdsL1(4)-stim.leftrdsL1(2)).*(stim.leftrdsL1(3)-stim.leftrdsL1(1)); % in squared pp
                   stim.nbDots1 = round(stim.dotDensity.*stim.areaSizepp1./(pi.*(stim.dotSize(1)./2).^2));
-                  if mod(stim.nbDots1,2)==1; stim.nbDots1 = stim.nbDots1+1; end
+                  if mod(stim.nbDots1,1)==1; stim.nbDots1 = stim.nbDots1+1; end
                   stim.areaSizepp2 = (stim.leftrdsL2(4)-stim.leftrdsL2(2)).*(stim.leftrdsL2(3)-stim.leftrdsL2(1)); % in squared pp
-                  stim.nbDots2 = round(stim.dotDensity.*stim.areaSizepp2./(pi.*(stim.dotSize(2)./2).^2));
-                  if mod(stim.nbDots2,2)==1; stim.nbDots2 = stim.nbDots2+1; end
+                  stim.nbDots2 = round(stim.dotDensity.*stim.areaSizepp1./(pi.*(stim.dotSize(2)./2).^2));
+                  if mod(stim.nbDots2,1)==1; stim.nbDots2 = stim.nbDots2+1; end
                   
 %                 %choose a size for each dot
 %                 if numel(stim.nbDots,2)>1
@@ -116,11 +116,11 @@ try
                 
                 %choose a random directions for the not coherent dots
                 stim.directions1 = rand(1,stim.nbDots1).*2*pi;
-                stim.directions2 = rand(1,stim.nbDots2).*2*pi;
+                stim.directions2 = stim.directions1;
                 %and also one for the coherent dot
-                coherent_dir = rand(1).*2*pi;
-                stim.directions1(randsample(stim.nbDots1,round(stim.nbDots1.*stim.coherence./100),0)) = coherent_dir;
-                stim.directions2(randsample(stim.nbDots2,round(stim.nbDots2.*stim.coherence./100),0)) = coherent_dir;
+                coherent
+                stim.directions1(randsample(stim.nbDots1,round(stim.nbDots1.*stim.coherence./100),0))=rand(1).*2*pi;
+                stim.directions2(randsample(stim.nbDots2,round(stim.nbDots2.*stim.coherence./100),0))=rand(1).*2*pi;
                 
               % initiate left RDS dots coordinates
                 % Note that we reduce the size of each side by the disparity of the other side because disparities create
@@ -144,6 +144,7 @@ try
                         [coordLeftL1(:,:,fram), coordLeftR1(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
                     else
                         [coordLeftL1(:,:,fram), coordLeftR1(:,:,fram)] = generateRDSStereoCoord(coordLeftL1(:,:,fram-1),coordLeftR1(:,:,fram-1),stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
+
                     end
                 end
               % initiate right RDS dots coordinates
@@ -162,6 +163,7 @@ try
                         [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
                     else
                         [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord(coordLeftL2(:,:,fram-1),coordLeftR2(:,:,fram-1),stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
+
                     end
                 end
               % initiate right RDS dots coordinates

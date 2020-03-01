@@ -146,7 +146,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
 %         
 
          % RDS dots        
-         stim.dotSizeVA = 0.5;        
+         stim.dotSizeVA = [0.5, 0.2];     
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
@@ -154,27 +154,27 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          % However, drawDots does not support the large size
          %stim.densityXsize = 1800; % constant size (in arcsec) x density (in dots by VA2)
          %stim.dotDensity_VA2 = stim.densityXsize./mean(stim.dotSizeVA.*3600); % in dots per squared VA
-         stim.dotDensity = 25/100; % in % of area occupied by dots     
-         stim.speedVA_sec = 0.8; % in VA by sec
+         stim.dotDensity = 10/100; % in % of area occupied by dots     
+         stim.speedVA_sec = 0.5; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black
           %  if mod(stim.dotSize,2)~=1; disp('dotsize should be odd');  sca; xx; end
           %  if stim.dotSize<3; disp('dotsize should be greater than 3');  sca; xx; end
          stim.coherence = 75; %?
-         stim.distBetwDots_min = 0; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
+         stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
          stim.maxLoadingTime = 5; %in sec, maximum calculation time allowed to find dot coordinates
          
         % RDS width and height / be sure to adapt that so that it is
         % compatible with your screen size and distance
         % THIS IS THE SIZE OF ONLY ONE RDS (we have one on the left, one
         % the right)
-         stim.rdsWidthVA = 3; %6.5 
-         stim.rdsHeightVA = 7; %6.5
-         stim.rdsInterspaceVA = 0.1; %space size between RDS in VA
+         stim.rdsWidthVA = 3.5; %6.5 
+         stim.rdsHeightVA = 8; %6.5
+         stim.rdsInterspaceVA = 0; %space size between RDS in VA
          
         %Large box properties (outer frame for fusion)
          stim.frameLineWidthVA = 0.3; %line width of the frames in VA
-         stim.spaceFrameRdsVA = 0.3;    %size of the space between the rds and the outer frame in VA 0.2
+         stim.spaceFrameRdsVA = 0.2;    %size of the space between the rds and the outer frame in VA 0.2
          stim.frameWidthVA = 2*stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.rdsInterspaceVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
          stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65
                                       
@@ -185,7 +185,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.itemDuration = 2000;        % RDS total presentation time in ms HERE
          if stim.flash==0 && mod(stim.itemDuration,(1000*scr.frameTime))~=0; warni('Stimulus duration is not a factor of the frame duration. For precision, it could be...')
              warni('...wise (but we will round anyway) to adjust stim.itemDuration by ',mod(stim.itemDuration,(1000*scr.frameTime)),'ms'); end
-         stim.flashDuration  = 250;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
+         stim.flashDuration  = 200;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
          if mod(stim.itemDuration,stim.flashDuration)~=0; warni('Stimulus duration is not a factor of flash duration. For precision, it could be...')
              warni('...wise to adjust stim.itemDuration by ',mod(stim.itemDuration,stim.flashDuration),'ms'); end
          stim.interTrial   = 50;           % Minimal ISI in ms
@@ -215,8 +215,11 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;
-        if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
-    %--------------------------------------------------------------------------
+        %HERE
+        scr.antialliasingMode = 3;
+        %if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
+        scr.lenient = 1; %HERE
+        %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------
 %          sounds.duration = 0.2;
