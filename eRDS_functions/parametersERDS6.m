@@ -16,7 +16,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         expe.feedback = 0;               % 1 = yes, 0 = no
         expe.nbTrials = 73;              % number of trials HERE (for a near or a far side only)73
         expe.practiceTrials = 12;        % HERE 12 number of practice trials before task (used for prior estimation) (for either the near or the far disparities)   
-        expe.nn = expe.nbTrials+expe.practiceTrials; % number of trials in total (for either the near or the far disparities)
+        %expe.nn = expe.nbTrials+expe.practiceTrials; % number of trials in total (for either the near or the far disparities)
         % the actual total number of trials is two times expe.nn because we adds near and far trials.
         expe.version = 'eRDS6';
         expe.time = [];                    % duration of the sessions in min
@@ -33,7 +33,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         expe.thx.fr = '====  MERCI  =====';
         expe.thx.en = '=====  THANK YOU  =====';
         expe.verbose = 'verboseON';      % verbose or not (verboseON or verboseOFF)
-        expe.results = nan(size(expe.nn,1),11);
+        %expe.results = nan(size(expe.nn,1),11);
         expe.language = 'fr';
         if isfield(expe,'DE')==0; expe.DE = 2; end          % dominant eye (non-amblyopic) 
         expe.allowed_key = [8, 1, 2, 3]; %the escape key is not esc but backspace %HERE REMOVE 3
@@ -174,7 +174,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         % compatible with your screen size and distance
         % THIS IS THE SIZE OF ONLY ONE RDS (we have one on the left, one
         % the right)
-         stim.rdsWidthVA = 3.5; %6.5 
+         stim.rdsWidthVA = 3.3; %6.5 
          stim.rdsHeightVA = 8; %6.5
          stim.rdsInterspaceVA = 0; %space size between RDS in VA
          
