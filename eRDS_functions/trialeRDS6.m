@@ -62,7 +62,7 @@ try
            beginbreak=GetSecs;
            countdown(30,scr,expe)
            %stereo: 
-           displaystereotext3(scr,sc(scr.fontColor,scr),expe.instrPosition,expe.breakInstructions.(expe.language),1);
+           displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,expe.breakInstructions.(expe.language),1);
            %or normal:
            %displayText(scr,sc(scr.fontColor,scr),[scr.res(3)/2-250,100,500,900],instructions.(expe.))
            flip2(expe.inputMode, scr.w);  
@@ -246,6 +246,16 @@ try
         fixationDuration = onsetStim - onsetFixation;
         frameOnset=onsetStim;  
              
+%         % decide whether upper or lower panel is black or white
+%         if rand(1)>0.5
+%             dotColor1 = stim.dotColor1; dotColor2 = stim.dotColor2;
+%         else
+%             dotColor2 = stim.dotColor1; dotColor1 = stim.dotColor2;
+%         end
+
+        % Shuffling white and black dots
+        dots1 = Shuffle(1:stim.nbDots1);
+        dots2 = Shuffle(1:stim.nbDots2);
         % ---- TIMING CHECKS ---%
              %Missed = 0;  
              timetable=nan(expe.nbFrames,1);
@@ -296,28 +306,28 @@ try
 %                    Screen('DrawDots', scr.w, coordRightR(:,(round(stim.nbDots/2)+1):end,frame), stim.dotsizes(round(stim.nbDots/2)+1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
       
              %draw half of the dots with dotColor1
-                   Screen('DrawDots', scr.w, coordLeftL1(:,1:round(stim.nbDots1/2),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR1(:,1:round(stim.nbDots1/2),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL1(:,1:round(stim.nbDots1/2),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR1(:,1:round(stim.nbDots1/2),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
 % 
 %             %draw half of the dots with dotColor2
-                   Screen('DrawDots', scr.w, coordLeftL1(:,(round(stim.nbDots1/2)+1):end,frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR1(:,(round(stim.nbDots1/2)+1):end,frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL1(:,(round(stim.nbDots1/2)+1):end,frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR1(:,(round(stim.nbDots1/2)+1):end,frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
              
              %draw half of the dots with dotColor1
-                   Screen('DrawDots', scr.w, coordLeftL2(:,1:round(stim.nbDots2/2),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR2(:,1:round(stim.nbDots2/2),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL2(:,1:round(stim.nbDots2/2),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR2(:,1:round(stim.nbDots2/2),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
 % 
 %             %draw half of the dots with dotColor2
-                   Screen('DrawDots', scr.w, coordLeftL2(:,(round(stim.nbDots2/2)+1):end,frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR2(:,(round(stim.nbDots2/2)+1):end,frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL2(:,(round(stim.nbDots2/2)+1):end,frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR2(:,(round(stim.nbDots2/2)+1):end,frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
 
                 %-----fixation
                 %  drawDichFixation(scr,stim);

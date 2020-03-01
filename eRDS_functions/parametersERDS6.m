@@ -111,14 +111,20 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %     scr.monitorRefreshRate=1/scr.frameTime;
         scr.monitorRefreshRate = Screen('NominalFrameRate', scr.w);
         scr.frameTime = 1/scr.monitorRefreshRate;
-    
+        
+        [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
+        scr.maxSmoothPointSize = maxSmoothPointSize;
+        %HERE
+        scr.antialliasingMode = 2;  % 2 is best, 3 is OK
+        %if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
+        scr.lenient = 1; %HERE
+        
     %======================================================================
     %              STIMULUS PARAMETERS 
     %======================================================================
         stim.maxLum = 50;   %maximum white to display
         stim.minLum = 0;    %maximum dark to display
         stim.flash = 1;     %0 no dyRDS - 1: dyRDS - 0 is not implemented yet
-        stim.instrPosition = [0,scr.centerY,300,1000];   % where to show instructions on screen 
     
 %         %Line
 %             stim.lineLum=20; %luminance in cd.m2
@@ -146,7 +152,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
 %         
 
          % RDS dots        
-         stim.dotSizeVA = [0.5, 0.1];     
+         stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
@@ -177,7 +183,6 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.spaceFrameRdsVA = 0.2;    %size of the space between the rds and the outer frame in VA 0.2
          stim.frameWidthVA = 2*stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.rdsInterspaceVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
          stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65
-                                      
             
     %--------------------------------------------------------------------------
     % TIMING (All times are in MILLISECONDS)
@@ -213,12 +218,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
-        [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
-        scr.maxSmoothPointSize = maxSmoothPointSize;
-        %HERE
-        scr.antialliasingMode = 2;
-        %if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
-        scr.lenient = 1; %HERE
+        
+        %Text properties
+         stim.instrPosition = [0,scr.centerY,stim.frameWidth,stim.frameHeight];   % where to show instructions on screen 
         %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------

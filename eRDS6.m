@@ -89,16 +89,17 @@ try
     disp('====================================')
     disp('1: Quick Mode')                               %defines quickMode - 1: ON / 2: OFF / The quick mode allows to skip all the input part at the beginning of the experiment to test faster for what the experiment is.
     disp('2: Manual Mode (not implemented yet)')
-    disp('3: Practice 2000 ms - 10 trials')
-    disp('4: Test 2000 ms - 25 practice + 60 trials')
-    disp('5: Test 200 ms - 25 practice + 60 trials')
+    disp('3: Practice 2000 ms - 10 trials') % large disparities
+    disp('4: Test 2000 ms - 2 x 12 practice + 73 trials')
+    disp('5: Test 200 ms - 2 x 12 practice + 73 trials')
     disp('6: Debug mode (not implemented yet)')         %defines debugMode - 1: ON  ; 2: OFF / In debug mode, some chosen variables are displayed on the screen
     disp('7: Robot mode')         %defines inputMode - 1: User  ; 2: Robot / The robot mode allows to test the experiment with no user awaitings or long graphical outputs, just to test for obvious bugs
+    disp('8: Checking mode')      % the validation 
     disp('====================================')
     expe.menu=str2double(input('Your option? ','s'));
     
     %=================== DEFINE ALL MANUALLY INPUT PARAMETERS ================
-        if expe.menu~=1 && expe.menu~=3 && expe.menu~=7           
+        if expe.menu~=1 && expe.menu~=3 && expe.menu~=7 && expe.menu~=8      
             expe.name=nameInput(datapath);  %erds datafile name
             expe.DE=str2double(input('Dominant (non-amblyopic) eye (1 for Left; 2 for Right):  ', 's')); %dominant eye
             expe.nameDST=input('Enter name given during last DST: ','s');    %dst name
@@ -107,18 +108,16 @@ try
     %==========================================================================
     %                           DEFAULT PARAMETERS
     %==========================================================================
-    [expe,scr,stim,sounds,psi]=parametersERDS6(expe)   
+    [expe,scr,stim,sounds,psi]=parametersERDS6(expe);   
     
     % Changes default values depending on menu
     switch expe.menu
         case 1
-            dispi('Quick mode uses default values')
-            expe.quickMode=1; 
+            dispi('Quick mode uses some default values')
+            expe.quickMode = 1; 
             expe.feedback = 1;
-            expe.practiceTrials = 2; 
+            expe.practiceTrials = 10; 
             expe.name = 'default';
-            %HERE
-            %if check_files(datapath, [expe.name,'.mat'],1,0,'verboseOFF'); delete(fullfile(datapath, [expe.name,'.mat'])); end % remove existing default erds file
             expe.nameDST = 'default';
         case 2
         case 3
@@ -142,6 +141,13 @@ try
             expe.inputMode = 2;
             stim.itemDuration = 0.00001;
             stim.interTrial = 0.00001;   
+        case 8
+            dispi('Check mode uses some default values')
+            expe.quickMode = 1; 
+            expe.feedback = 1;
+            expe.practiceTrials = 10; 
+            expe.name = 'default';
+            expe.nameDST = 'default';
     end 
 
     %HERE COULD DO A LAST CHECK WITH SCREEN
@@ -256,6 +262,11 @@ try
      %=====================================================================
      %               START THE STIMULUS PRESENTATION
      %=====================================================================
+     disp(expe)
+     disp(scr)
+     disp(stim)
+     disp(sounds)
+     disp(psi)
      
        expe.beginInterTrial=GetSecs;
        %we build two psi structures, one for far disparities (2) and one for
@@ -263,6 +274,52 @@ try
        psi1 = psi; psi1.sign = 'near'; % near disparities
        psi2 = psi; psi2.sign = 'far';  % far disparities
        sign_list = Shuffle([ones(1,expe.nn),zeros(1,expe.nn)]);
+       stopSignal = 0;
+       if expe.menu==8 % CHECKS
+%            % STEP 1 - luminance checks
+%            Screen('FillRect',scr.w, sc(scr.backgr,scr));
+%            step1 = ['Step 1 = Luminance checks. Check that next window (background) luminance is ',num2str(scr.backgr),' cd.-m2 and that the one after (white) is ',...
+%                num2str(stim.maxLum),'. Press a key to start.'];
+%            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step1,1);
+%            Screen('Flip',scr.w);
+%            waitForKey(scr.keyboardNum,expe.inputMode);
+%            Screen('FillRect',scr.w, sc(scr.backgr,scr));
+%            Screen('Flip',scr.w);
+%            waitForKey(scr.keyboardNum,expe.inputMode);
+%            Screen('FillRect',scr.w, sc(stim.maxLum,scr));
+%            Screen('Flip',scr.w);
+%            waitForKey(scr.keyboardNum,expe.inputMode);
+%            % STEP 2 - size checks
+%            step2 = ['Step 2 = Size checks. On next window, check that the dots are ',num2str(round(stim.dotSize(1)./scr.ppBymm)),...
+%                ' mm and ',num2str(round(stim.dotSize(2)./scr.ppBymm)),' mm. Press a key to start.'];
+%            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step2,1);
+%            Screen('Flip',scr.w);
+%            waitForKey(scr.keyboardNum,expe.inputMode);
+%            Screen('DrawDots', scr.w, [scr.LcenterXDot; scr.LcenterYDot-50], stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+%            Screen('DrawDots', scr.w, [scr.LcenterXDot; scr.LcenterYDot+50], stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+%            Screen('Flip',scr.w);
+%            waitForKey(scr.keyboardNum,expe.inputMode);
+           % STEP 3 - anti-aliasing checks
+           step3 = ['Step 3 = anti-aliasing checks. On next window, check that the dots are smoothly shifting from a location to another (no large step). Press a key to start.'];
+           displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step3,1);
+           Screen('Flip',scr.w);
+           waitForKey(scr.keyboardNum,expe.inputMode);
+           for i=0:10
+                Screen('DrawDots', scr.w, [scr.LcenterXDot+i/10; scr.LcenterYDot/2+i*stim.dotSize(1)], stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                Screen('DrawLine', scr.w, sc(stim.dotColor1,scr),scr.LcenterXLine+stim.dotSize(1)/2+2,1,scr.LcenterXLine+stim.dotSize(1)/2+2,scr.res(4), 1);
+                Screen('DrawLine', scr.w, sc(stim.dotColor1,scr),scr.LcenterXLine-stim.dotSize(1)/2-2,1,scr.LcenterXLine-stim.dotSize(1)/2-2,scr.res(4), 1);
+           end
+           Screen('Flip',scr.w);
+           waitForKey(scr.keyboardNum,expe.inputMode);
+           step4 = ['Step 4 = stereoDeviation check. On next window, check that frames do not cross over. Press a key to start.'];
+           displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step4,1);
+           Screen('Flip',scr.w);
+           waitForKey(scr.keyboardNum,expe.inputMode);
+           Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth/2);
+           Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth/2); 
+           Screen('Flip',scr.w);
+           waitForKey(scr.keyboardNum,expe.inputMode);
+       else
            for trial=1:(2*expe.nn)
                    if sign_list(trial) == 0
                         [expe, psi1, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi1);
@@ -271,7 +328,7 @@ try
                    end
                if stopSignal==1; break; end
            end         
-                                   
+       end                        
     %--------------------------------------------------------------------------
     %   SAVE AND QUIT
     %--------------------------------------------------------------------------
@@ -304,8 +361,7 @@ try
         %===== QUIT =====%
             precautions(scr.w, 'off');
             changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz);
-            diary OFF
-              
+            diary OFF       
               
 catch err   %===== DEBUGING =====%
     sca
