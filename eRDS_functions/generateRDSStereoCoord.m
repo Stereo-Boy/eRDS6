@@ -71,7 +71,11 @@ end
 
 overlap=1; outOfLimits=1;
 while overlap==1 || outOfLimits==1 % we avoid them jointly because avoiding one can generate the other
+    if stim.overlap == 0
     [coordL, coordR, overlap, possibleDots]= avoidOverlap(coordL,coordR,xAreaLine,yAreaLine,stim,disparity,dotSize,possibleDots);
+    else
+        overlap = 0;
+    end
     [coordL, coordR, outOfLimits, possibleDots]= avoidOutOfLimits(coordL,coordR,xAreaLine,yAreaLine,disparity,stim,dotSize,possibleDots);
 end
 

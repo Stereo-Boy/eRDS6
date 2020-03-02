@@ -35,9 +35,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         expe.verbose = 'verboseON';      % verbose or not (verboseON or verboseOFF)
         %expe.results = nan(size(expe.nn,1),11);
         expe.language = 'fr';
-        if isfield(expe,'DE')==0; expe.DE = 2; end          % dominant eye (non-amblyopic) 
+        %if isfield(expe,'DE')==0; expe.DE = 2; end          % dominant eye (non-amblyopic) - this one is loaded from DST file
         expe.allowed_key = [8, 1, 2, 3]; %the escape key is not esc but backspace %HERE REMOVE 3
-        expe.allowed_key_locked = [1, 2]; % after escapeTimeLimit, escape key is locked
+        expe.allowed_key_locked = [1, 2]; % after escapeTimeLimit, escape key is locked to avoid quitting by mistake
         expe.current_allowed = expe.allowed_key; 
         %       Response Code Table:
         %               0: no keypress before time limit
@@ -75,9 +75,8 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         %careful: if you have 1px of disparity for each eye (not just one), the above disparity by pixel should be multiplied by two
         
      %now defines centers of screen and centers of stereo screens
-     %Caution has to be taken because the screen origin for DrawLine and
-     %DrawDots are different, and are also dependent on the screen
-     %On a viewPixx, screen originates at [1,0] for DrawLine and [0,1]
+     %Caution has to be taken because the screen origin for DrawLine and DrawDots are different, and are also dependent on the screen
+     %On some viewPixx, screen originates at [1,0] for DrawLine and [0,1]
        %for DrawDots
         scr.centerX = scr.res(3)/2;
         scr.centerY = scr.res(4)/2;
@@ -95,29 +94,25 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.LcenterXDot=ceil(scr.centerX-scr.stereoDeviation); %stereo position of left eye center
         scr.RcenterXDot=ceil(scr.centerX+scr.stereoDeviation); %stereo position of right eye center
         scr.centerYDot=ceil(scr.centerY); %stereo position of left eye center
-        
-        
+            
         scr.backgr=15; %in cd/m2
         scr.keyboardNum=-1; % all available keyboards
-       % scr.rectwindow = [scr.LcenterXLine-stim.frameWidth/2,scr.LcenterYLine-stim.frameHeight/2,scr.LcenterXLine+stim.frameWidth/2,scr.LcenterYLine+stim.frameHeight/2];
+        scr.fontSize  = 30; % font size for text drawings
+        %scr.rectwindow = [scr.LcenterXLine-stim.frameWidth/2,scr.LcenterYLine-stim.frameHeight/2,scr.LcenterXLine+stim.frameWidth/2,scr.LcenterYLine+stim.frameHeight/2];
 
         scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
-        scr.fontSize  = 30;
-        Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency
-        
+        Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency    
            
      %    scr.frameTime =Screen('GetFlipInterval', scr.w, 2);
-       %   scr.frameTime = 1/60; %CHANGE HERE
+     %   scr.frameTime = 1/60; %CHANGE HERE
     %     scr.monitorRefreshRate=1/scr.frameTime;
         scr.monitorRefreshRate = Screen('NominalFrameRate', scr.w);
         scr.frameTime = 1/scr.monitorRefreshRate;
         
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
-        scr.maxSmoothPointSize = maxSmoothPointSize;
-        %HERE
-        scr.antialliasingMode = 2;  % 2 is best, 3 is OK
-        %if stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
-        scr.lenient = 1; %HERE
+        scr.maxSmoothPointSize = maxSmoothPointSize;        %HERE
+        scr.antialliasingMode = 3;  % 2 is best, 3 is OK HERE
+        scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
     %======================================================================
     %              STIMULUS PARAMETERS 
@@ -160,27 +155,26 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          % However, drawDots does not support the large size
          %stim.densityXsize = 1800; % constant size (in arcsec) x density (in dots by VA2)
          %stim.dotDensity_VA2 = stim.densityXsize./mean(stim.dotSizeVA.*3600); % in dots per squared VA
-         stim.dotDensity = 10/100; % in % of area occupied by dots     
+         stim.dotDensity = [24/100, 4/100]; % in % of area occupied by dots for each dot size, so that size in arcsec x nb dots by degree = 2175    
+         stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
+         stim.overlap = 0; % can dots overlap each other or not? 0 no, 1 yes (if they can overlap, distBetwDots_min does not matter)
+         stim.maxLoadingTime = 10; %in sec, maximum calculation time allowed to find dot coordinates
+         stim.coherence = 0; % share of dots (in %) that have a coherent motion - careful, coherent motion decreases stereoacuity: Hadani & Vardi, 1987
          stim.speedVA_sec = 0.5; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black
           %  if mod(stim.dotSize,2)~=1; disp('dotsize should be odd');  sca; xx; end
           %  if stim.dotSize<3; disp('dotsize should be greater than 3');  sca; xx; end
-         stim.coherence = 75; %?
-         stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
-         stim.maxLoadingTime = 5; %in sec, maximum calculation time allowed to find dot coordinates
          
-        % RDS width and height / be sure to adapt that so that it is
-        % compatible with your screen size and distance
-        % THIS IS THE SIZE OF ONLY ONE RDS (we have one on the left, one
-        % the right)
+        % RDS width and height / be sure to adapt that so that it is compatible with your screen size and distance
+        % THIS IS THE SIZE OF ONLY ONE RDS space (we have one on the left, one the right)
          stim.rdsWidthVA = 3.3; %6.5 
          stim.rdsHeightVA = 8; %6.5
          stim.rdsInterspaceVA = 0; %space size between RDS in VA
          
         %Large box properties (outer frame for fusion)
          stim.frameLineWidthVA = 0.3; %line width of the frames in VA
-         stim.spaceFrameRdsVA = 0.2;    %size of the space between the rds and the outer frame in VA 0.2
+         stim.spaceFrameRdsVA = 0.1;    %size of the space between the rds and the outer frame in VA 0.2
          stim.frameWidthVA = 2*stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.rdsInterspaceVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
          stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65
             
@@ -194,7 +188,6 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          if mod(stim.itemDuration,stim.flashDuration)~=0; warni('Stimulus duration is not a factor of flash duration. For precision, it could be...')
              warni('...wise to adjust stim.itemDuration by ',mod(stim.itemDuration,stim.flashDuration),'ms'); end
          stim.interTrial   = 0;           % Minimal ISI in ms
-       % stim.frameTime = scr.frameTime;  
     %--------------------------------------------------------------------------   
 
 % ============================================
@@ -221,14 +214,11 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         
         %Text properties
          stim.instrPosition = [0,scr.centerY,stim.frameWidth,stim.frameHeight];   % where to show instructions on screen 
-        %--------------------------------------------------------------------------
+         if scr.lenient==0 && stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
+
+    %--------------------------------------------------------------------------
     %         sounds PARAMETERS
     %--------------------------------------------------------------------------
-%          sounds.duration = 0.2;
-%          sounds.freq1 = 1000; %correct response beep
-%          sounds.freq2 = 500;  %incorrect response beep
-%          sounds.success = soundDefine(sounds.duration,sounds.freq1);
-%          sounds.fail = soundDefine(sounds.duration,sounds.freq2);
         sounds = struct();
         [wave1, sounds.freq1] = psychwavread(fullfile(expe.soundpath,'success.wav'));
         sounds.success = wave1';
@@ -290,13 +280,13 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         
         precautions(scr.w, 'on');
  
-%     SPECIAL for VIEWPIXX
+%     SPECIAL for VIEWPIXX - this needs the usb cable to be plugged
     if scr.viewpixx==1
         Datapixx('Open');
         Datapixx('EnableVideoScanningBacklight');
         Datapixx('RegWrRd');
         status = Datapixx('GetVideoStatus');
-        fprintf('Scanning Backling mode on = %d\n', status.scanningBacklight);
+        fprintf('Scanning Backlight mode on = %d\n', status.scanningBacklight);
         Datapixx('Close');
     end
 

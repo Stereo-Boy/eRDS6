@@ -95,9 +95,15 @@ try
     disp('6: Debug mode (not implemented yet)')         %defines debugMode - 1: ON  ; 2: OFF / In debug mode, some chosen variables are displayed on the screen
     disp('7: Robot mode')         %defines inputMode - 1: User  ; 2: Robot / The robot mode allows to test the experiment with no user awaitings or long graphical outputs, just to test for obvious bugs
     disp('8: Checking mode')      % the validation 
+    disp('9: Exit')
     disp('====================================')
     expe.menu=str2double(input('Your option? ','s'));
     
+    if expe.menu == 9 % QUIT
+            disp('Exiting')
+            diary OFF
+            return
+    end
     %=================== DEFINE ALL MANUALLY INPUT PARAMETERS ================
         if expe.menu~=1 && expe.menu~=3 && expe.menu~=7 && expe.menu~=8      
             expe.name=nameInput(datapath);  %erds datafile name
@@ -186,7 +192,7 @@ try
      %------------  POLARITY --------------%
      %1 : standard with grey background, 2: white on black background, 3: black on white background, 4:
      %Gray background, half of the dots blue light, half of the dots dark,
-     %%5: grey background, half of the dots white, the other black
+     %%5: grey background, half of the dots black, the other either white or blueish 
      switch stim.polarity 
         case {1}
             [stim.LmaxL,stim.LminL]=contrSym2Lum(expe.leftContr,scr.backgr); %white and black, left eye
@@ -227,19 +233,19 @@ try
             scr.fontColor = stim.minLum;
             stim.fixL = stim.LminL;
             stim.fixR = stim.LminR;
-            stim.dotColor1 = stim.minLum; stim.dotColor2 = stim.maxLum;%BACKGROUND
+            stim.dotColor1 = stim.minLum; stim.dotColor2 = stim.maxLum;
             stim.targDotColor1 = [stim.dotColor1 , stim.dotColor1, stim.dotColor1];
             stim.targDotColor2 = [0 , 0, stim.dotColor2]; %blue dots
           % stim.targDotColor2 = [stim.dotColor2 , stim.dotColor2,stim.dotColor2] %white dots
          case {5}
-            [stim.LmaxL,stim.LminL]=contrSym2Lum(expe.leftContr,scr.backgr); %white and black, left eye
-            [stim.LmaxR,stim.LminR]=contrSym2Lum(expe.rightContr,scr.backgr); %white and black, right eye
+            [stim.LmaxL,stim.LminL]=contrSym2Lum(expe.leftContr,scr.backgr); %white and black, left eye (frames)
+            [stim.LmaxR,stim.LminR]=contrSym2Lum(expe.rightContr,scr.backgr); %white and black, right eye (frames)
             scr.fontColor = stim.minLum;
             stim.fixL = stim.LminL;
             stim.fixR = stim.LminR;
-            stim.dotColor1 = stim.minLum; stim.dotColor2 = stim.maxLum;
-            stim.targDotColor1 = stim.dotColor1; %white dots
-            stim.targDotColor2 = stim.dotColor2; %black dots
+            stim.dotColor1 = stim.minLum; %black dots 
+            stim.dotColor2 = stim.maxLum; %white dots
+            stim.dotColor3 = [stim.maxLum/2, stim.maxLum, stim.maxLum]; %blueish dots
      end
      
      % outer frames (for fusion) space
@@ -263,21 +269,22 @@ try
             stim.leftrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.rightrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.rightrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
-            
+     
+         disp('Expe structure: ');disp(expe);
+         disp('Scr structure: ');disp(scr);
+         disp('stim structure: ');disp(stim);
+         disp('Sounds structure: ');disp(sounds);
+         disp('Psi structure: ');disp(psi);
+         
      %=====================================================================
      %               START THE STIMULUS PRESENTATION
      %=====================================================================
-     disp(expe)
-     disp(scr)
-     disp(stim)
-     disp(sounds)
-     disp(psi)
-     
        expe.beginInterTrial=GetSecs;
        %we build two psi structures, one for far disparities (2) and one for
        %near disparities (1)
        psi1 = psi; psi1.sign = 'near'; % near disparities
        psi2 = psi; psi2.sign = 'far';  % far disparities
+       clear psi;
        sign_list = Shuffle([ones(1,expe.nn),zeros(1,expe.nn)]);
        stopSignal = 0;
        if expe.menu==8 % CHECKS
@@ -290,7 +297,11 @@ try
            Screen('FillRect',scr.w, sc(scr.backgr,scr));
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
-           Screen('FillRect',scr.w, sc(stim.maxLum,scr));
+           Screen('FillRect',scr.w, sc(stim.dotColor2,scr));
+           Screen('Flip',scr.w);
+           waitForKey(scr.keyboardNum,expe.inputMode);
+           Screen('FillRect',scr.w, sc(stim.dotColor3,scr));
+           stim.dotColor2
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            step2 = ['Step 2 = Size checks. On next window, check that the dots are ',num2str(round(stim.dotSize(1)./scr.ppBymm)),...
@@ -384,8 +395,12 @@ try
             disp('==========================================')
             disp('         Results')
             dispi('Duration:',round((GetSecs-expe.startTime)/60,1));
-            dispi(psi1.sign,' disparities: threshold = ',round(psi1.threshold,1),' arcsec')
-            dispi(psi2.sign,' disparities: threshold = ',round(psi2.threshold,1),' arcsec')
+            if isfield(psi1, 'threshold')
+                dispi(psi1.sign,' disparities: threshold = ',round(psi1.threshold,1),' arcsec')
+                dispi(psi2.sign,' disparities: threshold = ',round(psi2.threshold,1),' arcsec')
+            else
+                disp('No threshold detected in psi structure.')
+            end
 catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
@@ -402,7 +417,6 @@ catch err   %===== DEBUGING =====%
         psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
     end
     if exist('scr','var'); save(fullfile(logpath,[expe.name,'-crashlog'])); end
-    if exist('psi','var');    clear psi; end
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
