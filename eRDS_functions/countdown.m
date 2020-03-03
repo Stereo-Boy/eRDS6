@@ -1,4 +1,4 @@
-function countdown(begin,scr,expe)
+function countdown(begin,scr,stim)
 %====================================
 %countdown(begin,window,color)
 %
@@ -9,7 +9,7 @@ function countdown(begin,scr,expe)
 %=====================================
 
 for i=begin:-1:1
-    displaystereotext3(scr,sc(scr.fontColor,scr),expe.instrPosition,sprintf('%s%d','BREAK -------------> ', i),1);
+    displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,sprintf('%s%d','BREAK -------------> ', i),1);
     Screen('Flip', scr.w);
     WaitSecs(1);
 end

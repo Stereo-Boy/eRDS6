@@ -60,7 +60,7 @@ try
        if (GetSecs-expe.lastBreakTime)/60>=expe.breakTime
            Screen('FillRect',scr.w, sc(scr.backgr,scr));
            beginbreak=GetSecs;
-           countdown(30,scr,expe)
+           countdown(30,scr,stim)
            %stereo: 
            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,expe.breakInstructions.(expe.language),1);
            %or normal:

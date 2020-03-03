@@ -80,8 +80,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
        %for DrawDots
         scr.centerX = scr.res(3)/2;
         scr.centerY = scr.res(4)/2;
-        scr.stereoDeviation = scr.ppBymm.*scr.frameSep; %nb of px necessary to add from screen center in order to put a stim a zero disp ?
-           
+        scr.frameSep = scr.W/4;
+        scr.stereoDeviation = scr.ppBymm.*scr.frameSep; %nb of px necessary to add from screen center in order to put a stim at zero disparity
+        % This above value is calibrated during DST (red-green lines)           
         scr.LcenterX=round(scr.centerX-scr.stereoDeviation);
         scr.RcenterX=round(scr.centerX+scr.stereoDeviation);
         scr.centerY=round(scr.centerY);
