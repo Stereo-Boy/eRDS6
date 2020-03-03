@@ -289,7 +289,7 @@ try
        stopSignal = 0;
        if expe.menu==8 % CHECKS
            Screen('FillRect',scr.w, sc(scr.backgr,scr));
-           step1 = ['Step 1 = Luminance checks. Check that next window (background) luminance is ',num2str(scr.backgr),' cd.-m2 and that the one after (white) is ',...
+           step1 = ['Step 1 = Luminance checks. Check that next window (background) luminance is ',num2str(scr.backgr),' cd.-m2, that the two after (white and blueish) are ',...
                num2str(stim.maxLum),'. Press a key to start.'];
            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step1,1);
            Screen('Flip',scr.w);
@@ -301,11 +301,11 @@ try
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            Screen('FillRect',scr.w, sc(stim.dotColor3,scr));
-           stim.dotColor2
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            step2 = ['Step 2 = Size checks. On next window, check that the dots are ',num2str(round(stim.dotSize(1)./scr.ppBymm)),...
                ' mm and ',num2str(round(stim.dotSize(2)./scr.ppBymm)),' mm. Smaller dot should be ',num2str(min(stim.dotSize)),' pixels. Press a key to start.'];
+           Screen('FillRect',scr.w, sc(scr.backgr,scr));
            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step2,1);
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
@@ -337,17 +337,18 @@ try
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            step5 = ['Step 5 = Trial check. On next window, check that the long trial seems OK. You should hear sound. Press a key to start.'];
+           Screen('FillRect',scr.w, sc(scr.backgr,scr));
            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step5,1);
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            [expe, psi1, stopSignal]=trialeRDS6(1,stim,scr,expe,sounds,psi1);
+           Screen('FillRect',scr.w, sc(scr.backgr,scr));
            stim.itemDuration = 200;
            step6 = ['Step 6 = Timing check. On next window, check that the short trial is ',num2str(stim.itemDuration),' ms. Press a key to start.'];
            displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,step6,1);
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            [expe, psi1, stopSignal]=trialeRDS6(1,stim,scr,expe,sounds,psi1);    
-           
        else
            for trial=1:(2*expe.nn)
                    if sign_list(trial) == 0

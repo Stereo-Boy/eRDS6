@@ -111,7 +111,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;        %HERE
-        scr.antialliasingMode = 3;  % 2 is best, 3 is OK HERE
+        scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
         scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
     %======================================================================
