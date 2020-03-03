@@ -39,6 +39,7 @@ else
             warning(['That screen does not support that resolution/refresh rate: we keep the current resolution at ', num2str(currentResolution.width), 'x', num2str(currentResolution.height)])
         else
            old=Screen('Resolution', screenNumber , width, height, hz); 
+           currentResolution = struct();
            currentResolution=Screen('Resolution', screenNumber);
            WaitSecs(1);
             if currentResolution.width == width && currentResolution.height==height && currentResolution.hz==hz
