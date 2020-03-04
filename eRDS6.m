@@ -94,7 +94,7 @@ try
     disp('5: Test 200 ms - 2 x 12 practice + 73 trials')
     disp('6: Debug mode (not implemented yet)')         %defines debugMode - 1: ON  ; 2: OFF / In debug mode, some chosen variables are displayed on the screen
     disp('7: Robot mode')         %defines inputMode - 1: User  ; 2: Robot / The robot mode allows to test the experiment with no user awaitings or long graphical outputs, just to test for obvious bugs
-    disp('8: Checking mode')      % the validation 
+    disp('8: Checking mode')      % some checks 
     disp('9: Exit')
     disp('====================================')
     expe.menu=str2double(input('Your option? ','s'));
@@ -397,8 +397,7 @@ try
             disp('         Results')
             dispi('Duration:',round((GetSecs-expe.startTime)/60,1));
             if isfield(psi1, 'threshold')
-                dispi(psi1.sign,' disparities: threshold = ',round(psi1.threshold,1),' arcsec')
-                dispi(psi2.sign,' disparities: threshold = ',round(psi2.threshold,1),' arcsec')
+                stereoAcuity(fullfile(datapath,expe.name))
             else
                 disp('No threshold detected in psi structure.')
             end

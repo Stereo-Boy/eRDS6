@@ -111,7 +111,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.frameTime = 1/scr.monitorRefreshRate;
         
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
-        scr.maxSmoothPointSize = maxSmoothPointSize;        %HERE
+        scr.maxSmoothPointSize = maxSmoothPointSize;       
         scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
         scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
@@ -121,32 +121,13 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         stim.maxLum = 50;   %maximum white to display
         stim.minLum = 0;    %maximum dark to display
         stim.flash = 1;     %0 no dyRDS - 1: dyRDS - 0 is not implemented yet
-    
-%         %Line
-%             stim.lineLum=20; %luminance in cd.m2
-%             stim.nbLines=3; %nb of lines in a unresolved line stimulus NOT USED - always 3
-%             stim.lineSizeMin= 20; % in arcmin %20
-%             stim.eccentricityMin = 15; %eccentricity of the stim in arcmin
-%             stim.vertEccMin= stim.lineSizeMin/2+ 4; %vertical eccentricity of the line in arcmin (distance between midscreen and middle of the line to draw)
-%             stim.jitterRangeMin=30; %eccentricity jitter for lines, in min
-%             
+                
         %Fixation nonius cross / circle + fixation dot
          stim.fixationLengthMin = 25; % half size in arcmin
          stim.fixationLineWidthMin = 6; %in arcmin 8
          stim.fixationOffsetMin = 10; %offset between central fixation and nonius in arcmin
          stim.fixationDotSizeMin = 11; %in arcmin
-            
-%         %Nonius
-%             stim.noniusLum=20; 
-%             stim.noniusLineSizeMin= 20; % half size in arcmin
-%             stim.noniusLineWidthSec=60; %in arcsec
-%             stim.noniusOffsetMin= 5; %offset between central fixation and nonius in arcmin
-%             stim.fixationSizeSec=90; %in arcsec
-            
-%         %Mask
-%             stim.maskLum=10; %max amplitude of mask luminance
-%         
-
+             
          % RDS dots        
          stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 
          % size for a dot in visual angle (can be a list of dot sizes)

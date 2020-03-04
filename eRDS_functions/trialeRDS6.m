@@ -122,7 +122,11 @@ try
                 % Note that we reduce the size of each side by the disparity of the other side because disparities create
                 % some out-of-limits dots that are removed (and replaced) which results in a bigger exclusion area for the side
                 % with the larger disparity (of the size difference = to the disparity difference)
-
+                coordLeftL1 = nan(2,stim.nbDots1, expe.nbFrames);
+                coordRightL1 = coordLeftL1; coordLeftR1 = coordLeftL1; coordRightR1 = coordLeftL1;
+                coordLeftL2 = nan(2,stim.nbDots2, expe.nbFrames);
+                coordRightL2 = coordLeftL1; coordRightR2 = coordLeftL2; coordLeftR2 = coordLeftL2;
+                 
                 % generates all the dots coordinates for each frame   
                 for fram=1:expe.nbFrames
                     if fram == 1
