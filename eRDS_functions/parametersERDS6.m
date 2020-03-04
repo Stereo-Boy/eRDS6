@@ -13,7 +13,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %         EXPERIENCE PARAMETERS
     %--------------------------------------------------------------------------
         %general
-        expe.feedback = 0;               % 1 = yes, 0 = no
+        expe.feedback = 2;               % 0 = never; 1 = always; 2 = yes for practice, no for test
         expe.nbTrials = 73;              % number of trials HERE (for a near or a far side only)73
         expe.practiceTrials = 12;        % HERE 12 number of practice trials before task (used for prior estimation) (for either the near or the far disparities)   
         %expe.nn = expe.nbTrials+expe.practiceTrials; % number of trials in total (for either the near or the far disparities)

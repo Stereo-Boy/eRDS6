@@ -33,7 +33,7 @@ nbFiles=numel(dir(fullfile(folder,expr)));
 success = (nbFiles == n);
 
 if success==1
-    dispi(nbFiles,'/',n,' files correctly detected (', expr, ') in ', folder, verbose)
+    dispi(nbFiles,'/',n,' files correctly detected (', expr, ') in ', folder, verbose);
 else
     if forceError, erri('Nb of files is incorrect: (',expr,'): ', nbFiles,'/',n,' files detected in ', folder)
     else warni('Nb of files is incorrect (',expr,'): ', nbFiles,'/',n,' files detected.in ', folder, verbose)

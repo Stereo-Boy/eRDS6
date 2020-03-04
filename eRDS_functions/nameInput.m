@@ -9,7 +9,7 @@ if success==0
     if choice==1
      str=floor(now);
      nameId = [nameId '_' num2str(str)];
-     disp(['New ID: ',nameId])
+     disp(['New ID: ',nameId]);
      check_files(dataPath, nameId, 1, 1, 'verboseON');
     elseif choice==2
         error('Voluntary exit')

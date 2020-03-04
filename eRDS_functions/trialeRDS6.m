@@ -125,7 +125,7 @@ try
                 coordLeftL1 = nan(2,stim.nbDots1, expe.nbFrames);
                 coordRightL1 = coordLeftL1; coordLeftR1 = coordLeftL1; coordRightR1 = coordLeftL1;
                 coordLeftL2 = nan(2,stim.nbDots2, expe.nbFrames);
-                coordRightL2 = coordLeftL1; coordRightR2 = coordLeftL2; coordLeftR2 = coordLeftL2;
+                coordRightL2 = coordLeftL2; coordRightR2 = coordLeftL2; coordLeftR2 = coordLeftL2;
                  
                 % generates all the dots coordinates for each frame   
                 for fram=1:expe.nbFrames
@@ -483,7 +483,7 @@ try
            
             % --- FEEDBACK  ---%
             expected_key = expected_side + 1; 
-             if expe.inputMode==1 
+             if expe.feedback>0
                 if (expected_key-responseKey)==0 %CORRECT
                    % play(sounds.success.obj);
                    PsychPortAudio('Start', sounds.handle1, 1, 0, 1);
@@ -491,7 +491,8 @@ try
                 else
                     %UNCORRECT
                     psi.correct = 0;
-                    if expe.feedback == 1 %meaningful auditory feedback
+                    %if expe.feedback == 1 || (expe.feedback == 2 && psi.practice_trial==1) %meaningful auditory feedback
+                    if expe.feedback == 1 || expe.feedback == 2 %HERE
                         %play(sounds.fail.obj);
                         PsychPortAudio('Start', sounds.handle2, 1, 0, 1);
                     else    %keypress auditory feedback
