@@ -1,4 +1,4 @@
-function success=changeResolution(screenNumber, width, height, hz)
+function [success, oldResolution, currentResolution] = changeResolution(screenNumber, width, height, hz)
 %function success=changeResolution(screenNumber, width, height, hz)
 % The function checks for the screen screenNumber that width and height (in
 % pixels) and refresh rate (hz in  hz) are an appropriate supported combination of resolution and then
@@ -22,6 +22,7 @@ if currentResolution.width == width && currentResolution.height==height  && curr
        dispi('changeResolution: We will do nothing because the current resolution is already at ',width, 'x',height)
        dispi('and the current refresh rate is already ', hz, 'hz')
        success=2;
+       oldResolution = currentResolution;
 else
     disp(['changeResolution: attempting to change resolution of screen ', num2str(screenNumber), ' to ', num2str(width), 'x', num2str(height)])
     dispi('and the refresh rate to ', hz, 'hz')
@@ -38,7 +39,7 @@ else
             success=0;
             warning(['That screen does not support that resolution/refresh rate: we keep the current resolution at ', num2str(currentResolution.width), 'x', num2str(currentResolution.height)])
         else
-           old=Screen('Resolution', screenNumber , width, height, hz); 
+           oldResolution = Screen('Resolution', screenNumber , width, height, hz); 
            currentResolution=Screen('Resolution', screenNumber);
            WaitSecs(1);
             if currentResolution.width == width && currentResolution.height==height && currentResolution.hz==hz
@@ -52,4 +53,5 @@ else
             end
         end
 end
+
 end

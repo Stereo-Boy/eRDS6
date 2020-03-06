@@ -5,7 +5,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     
     %set the randomness random
     try rng('shuffle'); catch; rand('twister', sum(100*clock)); end
-    Screen('Preference', 'SkipSyncTests', 2); % HERE CHANGE TO 0!!!
+    Screen('Preference', 'SkipSyncTests', 0); % HERE CHANGE TO 0!!!
     warni('SkipSyncTests: change line 8 to 0')
     AssertOpenGL; %?
 
@@ -36,7 +36,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         %expe.results = nan(size(expe.nn,1),11);
         expe.language = 'fr';
         %if isfield(expe,'DE')==0; expe.DE = 2; end          % dominant eye (non-amblyopic) - this one is loaded from DST file
-        expe.allowed_key = [8, 1, 2, 3]; %the escape key is not esc but backspace %HERE REMOVE 3
+        expe.allowed_key = [8, 1, 2]; %the escape key is not esc but backspace 
         expe.allowed_key_locked = [1, 2]; % after escapeTimeLimit, escape key is locked to avoid quitting by mistake
         expe.current_allowed = expe.allowed_key; 
         %       Response Code Table:
@@ -57,14 +57,14 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.screenNumber=max(screens);            % will certainly not function correctly in multiple screen though
 
     %check that we have the appropriate resolution
-        scr.oldResolution=Screen('Resolution',scr.screenNumber);
-        if scr.oldResolution.width==scr.goalWidthRes && scr.oldResolution.height==scr.goalHeightRes && scr.oldResolution.hz==scr.goalRefreshRate
-            disp('Resolution and refresh are correct')
-            scr.pixelSize = scr.oldResolution.pixelSize;
-        else
-            scr.newResolution = changeResolution(scr.screenNumber, scr.goalWidthRes, scr.goalHeightRes, scr.goalRefreshRate);
-            scr.pixelSize = scr.newResolution.pixelSize;
-        end
+%        scr.oldResolution=Screen('Resolution',scr.screenNumber);
+%         if scr.oldResolution.width==scr.goalWidthRes && scr.oldResolution.height==scr.goalHeightRes && scr.oldResolution.hz==scr.goalRefreshRate
+%             disp('Resolution and refresh are correct')
+%             scr.pixelSize = scr.oldResolution.pixelSize;
+%         else
+        [success, scr.oldResolution, scr.newResolution]  = changeResolution(scr.screenNumber, scr.goalWidthRes, scr.goalHeightRes, scr.goalRefreshRate);
+        if success==0; error('See warning - resolution could not be changed appropriately');end
+        scr.pixelSize = scr.newResolution.pixelSize;
         scr.res=Screen('rect', scr.screenNumber); % screen size in pixel, format: [0 0 maxHoriz maxVert]
         
      %check if vertical and horizontal pixel sizes are the same
@@ -118,9 +118,9 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %======================================================================
     %              STIMULUS PARAMETERS 
     %======================================================================
-        stim.maxLum = 50;   %maximum white to display
-        stim.minLum = 0;    %maximum dark to display
-        stim.flash = 1;     %0 no dyRDS - 1: dyRDS - 0 is not implemented yet
+         stim.maxLum = 50;   %maximum white to display
+         stim.minLum = 0;    %maximum dark to display
+         stim.flash = 1;     %0 no dyRDS - 1: dyRDS - 0 is not implemented yet
                 
         %Fixation nonius cross / circle + fixation dot
          stim.fixationLengthMin = 25; % half size in arcmin
@@ -129,7 +129,8 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.fixationDotSizeMin = 11; %in arcmin
              
          % RDS dots        
-         stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 
+         stim.config = 2;                 % orientation of rds stimuli: 1: left - right panels / 2: inside - out 
+         stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 0.5 0.1
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
@@ -137,11 +138,11 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          % However, drawDots does not support the large size
          %stim.densityXsize = 1800; % constant size (in arcsec) x density (in dots by VA2)
          %stim.dotDensity_VA2 = stim.densityXsize./mean(stim.dotSizeVA.*3600); % in dots per squared VA
-         stim.dotDensity = [24/100, 4/100]; % in % of area occupied by dots for each dot size, so that size in arcsec x nb dots by degree = 2175    
+         stim.dotDensity = [12/100, 2/100]; % in % of area occupied by dots for each dot size, so that size in arcsec x nb dots by degree = 2175/2  
          stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
          stim.overlap = 0; % can dots overlap each other or not? 0 no, 1 yes (if they can overlap, distBetwDots_min does not matter)
          stim.maxLoadingTime = 10; %in sec, maximum calculation time allowed to find dot coordinates
-         stim.coherence = 0; % share of dots (in %) that have a coherent motion - careful, coherent motion decreases stereoacuity: Hadani & Vardi, 1987
+         stim.coherence = 0/100; % share of dots (in %) that have a coherent motion - careful, coherent motion decreases stereoacuity: Hadani & Vardi, 1987
          stim.speedVA_sec = 0.5; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black

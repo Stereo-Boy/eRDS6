@@ -255,14 +255,14 @@ try
             stim.frameR = [scr.RcenterXLine-stim.frameWidth/2,scr.RcenterYLine-stim.frameHeight/2,scr.RcenterXLine+stim.frameWidth/2,scr.RcenterYLine+stim.frameHeight/2];
      
      %---- RDS SPACE             
-        %defines space to be drawn inside with dots
-            stim.leftrdsL = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight);
-            stim.leftrdsR = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);
+        %defines space to be drawn inside with dots (left and right panels)
+            stim.leftrdsL = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight); %left eye
+            stim.leftrdsR = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);  %right eye
             stim.rightrdsL = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight);
             stim.rightrdsR = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);
-            % split the working area in two areas vertically, one will show large dots, the other small dots
-            stim.leftrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
-            stim.leftrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+        % split the working area in two areas vertically, that will show the same dots (for speed)
+            stim.leftrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2); %left eye
+            stim.leftrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2); %right eye
             stim.rightrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.rightrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.leftrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
@@ -349,7 +349,7 @@ try
            Screen('Flip',scr.w);
            waitForKey(scr.keyboardNum,expe.inputMode);
            [expe, psi1, stopSignal]=trialeRDS6(1,stim,scr,expe,sounds,psi1);    
-       else
+       else %ACTUAL TEST
            for trial=1:(2*expe.nn)
                    if sign_list(trial) == 0
                         [expe, psi1, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi1);

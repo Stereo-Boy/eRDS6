@@ -94,74 +94,81 @@ try
             if stim.flash == 0 % NOT IMPLEMENTED YET
             % [coordbgL, coordbgR, stim.nbDotsBg ]=generateRDSStereoCoord(expe.nbFrames, stim.bgRectL(4)-stim.bgRectL(2)+1, stim.bgRectL(3)-stim.bgRectL(1)+1, stim.dotDensity, stim.dotSize, stim.coherence, stim.speed, dispBg);
             else
-%                 % obtain the number of dots to generate for that area size, dot density, and possible dot sizes (assuming equal
-%                 % number of each possible size
-                  stim.areaSizepp1 = (stim.leftrdsL1(4)-stim.leftrdsL1(2)).*(stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2))); % in squared pp
-                  stim.nbDots1 = round(stim.dotDensity(1).*stim.areaSizepp1./(pi.*(stim.dotSize(1)./2).^2));
-                  if mod(stim.nbDots1,2)==1; stim.nbDots1 = stim.nbDots1+1; end
-                  stim.areaSizepp2 = (stim.leftrdsL2(4)-stim.leftrdsL2(2)).*(stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(1))); % in squared pp
-                  stim.nbDots2 = round(stim.dotDensity(2).*stim.areaSizepp2./(pi.*(stim.dotSize(2)./2).^2));
-                  if mod(stim.nbDots2,2)==1; stim.nbDots2 = stim.nbDots2+1; end
+                % obtain the number of dots to generate for that area size, dot density, and possible dot sizes (assuming equal number of each possible size)
+                % left rds
+                  stim.areaSizeppLeft = (stim.leftrdsL1(4)-stim.leftrdsL1(2)).*(stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2))); % in squared pp
+                  stim.nbDotsLeft(1) = round(stim.dotDensity(1).*stim.areaSizeppLeft./(pi.*(stim.dotSize(1)./2).^2));
+                  if mod(stim.nbDotsLeft(1),2)==1; stim.nbDotsLeft(1) = stim.nbDotsLeft(1)+1; end
+                  stim.nbDotsLeft(2) = round(stim.dotDensity(2).*stim.areaSizeppLeft./(pi.*(stim.dotSize(2)./2).^2));
+                  if mod(stim.nbDotsLeft(2),2)==1; stim.nbDotsLeft(2) = stim.nbDotsLeft(2)+1; end
+                  stim.totalNbDotsLeft = sum(stim.nbDotsLeft);
                   
-%                 %choose a different size for each dot
-%                 if numel(stim.nbDots,2)>1
-%                     stim.dotsizes = Shuffle([ones(1,stim.nbDots/2).*stim.dotSize(1),ones(1,stim.nbDots/2).*stim.dotSize(2)]);
-%                 else
-%                     stim.dotsizes = ones(1,stim.nbDots).*stim.dotSize;
-%                 end
+                % right rds
+                  stim.areaSizeppRight = (stim.rightrdsL1(4)-stim.rightrdsL1(2)).*(stim.rightrdsL1(3)-stim.rightrdsL1(1)-abs(L_R_disp_pp(1))); % in squared pp
+                  stim.nbDotsRight(1) = round(stim.dotDensity(1).*stim.areaSizeppRight./(pi.*(stim.dotSize(1)./2).^2));
+                  if mod(stim.nbDotsRight(1),2)==1; stim.nbDotsRight(1) = stim.nbDotsRight(1)+1; end
+                  stim.nbDotsRight(2) = round(stim.dotDensity(2).*stim.areaSizeppRight./(pi.*(stim.dotSize(2)./2).^2));
+                  if mod(stim.nbDotsRight(2),2)==1; stim.nbDotsRight(2) = stim.nbDotsRight(2)+1; end
+                  stim.totalNbDotsRight = sum(stim.nbDotsRight);
+                  
+                %choose a size for each dot - we work with half of the dots, and duplicate it because later, we generates coords for half of the list and duplicate 
+                stim.dotSizesLeft = repmat(Shuffle([ones(1,stim.nbDotsLeft(1)/2).*stim.dotSize(1),ones(1,stim.nbDotsLeft(2)/2).*stim.dotSize(2)]),[1,2]);
+                stim.dotSizesRight = repmat(Shuffle([ones(1,stim.nbDotsRight(1)/2).*stim.dotSize(1),ones(1,stim.nbDotsRight(2)/2).*stim.dotSize(2)]),[1,2]);
                 
                 %choose a random directions for the not coherent dots
-                stim.directions1 = rand(1,stim.nbDots1).*2*pi;
-                stim.directions2 = rand(1,stim.nbDots2).*2*pi;
+                stim.directionsLeft = rand(1,stim.totalNbDotsLeft).*2*pi;
+                stim.directionsRight = rand(1,stim.totalNbDotsRight).*2*pi;
                 %and also one for the coherent dot
                 coherent_dir = rand(1).*2*pi;
-                stim.directions1(randsample(stim.nbDots1,round(stim.nbDots1.*stim.coherence./100),0)) = coherent_dir;
-                stim.directions2(randsample(stim.nbDots2,round(stim.nbDots2.*stim.coherence./100),0)) = coherent_dir;
+                stim.directionsLeft(randsample(stim.totalNbDotsLeft,round(stim.totalNbDotsLeft.*stim.coherence),0)) = coherent_dir;
+                stim.directionsRight(randsample(stim.totalNbDotsRight,round(stim.totalNbDotsRight.*stim.coherence),0)) = coherent_dir;
                 
               % initiate left RDS dots coordinates
                 % Note that we reduce the size of each side by the disparity of the other side because disparities create
                 % some out-of-limits dots that are removed (and replaced) which results in a bigger exclusion area for the side
                 % with the larger disparity (of the size difference = to the disparity difference)
-                coordLeftL1 = nan(2,stim.nbDots1, expe.nbFrames);
-                coordRightL1 = coordLeftL1; coordLeftR1 = coordLeftL1; coordRightR1 = coordLeftL1;
-                coordLeftL2 = nan(2,stim.nbDots2, expe.nbFrames);
-                coordRightL2 = coordLeftL2; coordRightR2 = coordLeftL2; coordLeftR2 = coordLeftL2;
+                coordLeftL1 = nan(2,stim.totalNbDotsLeft, expe.nbFrames);
+                coordRightL1 = nan(2,stim.totalNbDotsRight, expe.nbFrames);
+                coordLeftR1 = coordLeftL1; coordRightR1 = coordRightL1;
+                coordLeftL2 = coordLeftL1; coordRightL2 = coordRightL1; 
+                coordRightR2 = coordRightL1; coordLeftR2 = coordLeftL1;
                  
-                % generates all the dots coordinates for each frame   
+                % generates all the dots coordinates for each frame 
+                %left upper panel
                 for fram=1:expe.nbFrames
                     if fram == 1
-                        [coordLeftL1(:,:,fram), coordLeftR1(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
+                        [coordLeftL(:,:,fram), coordLeftR(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.totalNbDotsLeft, stim.dotSizesLeft, stim.directionsLeft);                   
                     else
-                        [coordLeftL1(:,:,fram), coordLeftR1(:,:,fram)] = generateRDSStereoCoord(coordLeftL1(:,:,fram-1),coordLeftR1(:,:,fram-1),stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
+                        [coordLeftL(:,:,fram), coordLeftR(:,:,fram)] = generateRDSStereoCoord(coordLeftL(:,:,fram-1),coordLeftR(:,:,fram-1),stim,stim.leftrdsL1(4)-stim.leftrdsL1(2), stim.leftrdsL1(3)-stim.leftrdsL1(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.totalNbDotsLeft,stim.dotSizesLeft, stim.directionsLeft);                   
                     end
                 end
-
+                %right upper panel
                 % generates all the dots coordinates for each frame
                 for fram=1:expe.nbFrames
                     if fram == 1
-                        [coordRightL1(:,:,fram), coordRightR1(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.rightrdsL1(4)-stim.rightrdsL1(2), stim.rightrdsL1(3)-stim.rightrdsL1(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
+                        [coordRightL(:,:,fram), coordRightR(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.rightrdsL1(4)-stim.rightrdsL1(2), stim.rightrdsL1(3)-stim.rightrdsL1(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.totalNbDotsRight, stim.dotSizesRight, stim.directionsRight);                   
                     else
-                        [coordRightL1(:,:,fram), coordRightR1(:,:,fram)] = generateRDSStereoCoord(coordRightL1(:,:,fram-1),coordRightR1(:,:,fram-1),stim,stim.rightrdsL1(4)-stim.rightrdsL1(2), stim.rightrdsL1(3)-stim.rightrdsL1(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.nbDots1, stim.dotSize(1), stim.directions1);                   
+                        [coordRightL(:,:,fram), coordRightR(:,:,fram)] = generateRDSStereoCoord(coordRightL(:,:,fram-1),coordRightR(:,:,fram-1),stim,stim.rightrdsL1(4)-stim.rightrdsL1(2), stim.rightrdsL1(3)-stim.rightrdsL1(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.totalNbDotsRight, stim.dotSizesRight, stim.directionsRight);                   
                     end                   
                 end
-                
-                % generates all the dots coordinates for each frame   
-                for fram=1:expe.nbFrames
-                    if fram == 1
-                        [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
-                    else
-                        [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord(coordLeftL2(:,:,fram-1),coordLeftR2(:,:,fram-1),stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
-                    end
-                end
-
-                % generates all the dots coordinates for each frame
-                for fram=1:expe.nbFrames
-                    if fram == 1
-                        [coordRightL2(:,:,fram), coordRightR2(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.rightrdsL2(4)-stim.rightrdsL2(2), stim.rightrdsL2(3)-stim.rightrdsL2(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
-                    else
-                        [coordRightL2(:,:,fram), coordRightR2(:,:,fram)] = generateRDSStereoCoord(coordRightL2(:,:,fram-1),coordRightR2(:,:,fram-1),stim,stim.rightrdsL2(4)-stim.rightrdsL2(2), stim.rightrdsL2(3)-stim.rightrdsL2(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.nbDots2, stim.dotSize(2), stim.directions2);                   
-                    end                   
-                end
+%                 %left lower panel
+%                 % generates all the dots coordinates for each frame   
+%                 for fram=1:expe.nbFrames
+%                     if fram == 1
+%                         [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.totalNbDotsLeft, stim.dotSizesLeft, stim.directionsLeft);                   
+%                     else
+%                         [coordLeftL2(:,:,fram), coordLeftR2(:,:,fram)] = generateRDSStereoCoord(coordLeftL2(:,:,fram-1),coordLeftR2(:,:,fram-1),stim,stim.leftrdsL2(4)-stim.leftrdsL2(2), stim.leftrdsL2(3)-stim.leftrdsL2(1)-abs(L_R_disp_pp(2)), L_R_disp_pp(1),stim.totalNbDotsLeft, stim.dotSizesLeft, stim.directionsLeft);                   
+%                     end
+%                 end
+%                 %right lower panel
+%                 % generates all the dots coordinates for each frame
+%                 for fram=1:expe.nbFrames
+%                     if fram == 1
+%                         [coordRightL2(:,:,fram), coordRightR2(:,:,fram)] = generateRDSStereoCoord([],[],stim,stim.rightrdsL2(4)-stim.rightrdsL2(2), stim.rightrdsL2(3)-stim.rightrdsL2(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.totalNbDotsRight, stim.dotSizesRight, stim.directionsRight);                   
+%                     else
+%                         [coordRightL2(:,:,fram), coordRightR2(:,:,fram)] = generateRDSStereoCoord(coordRightL2(:,:,fram-1),coordRightR2(:,:,fram-1),stim,stim.rightrdsL2(4)-stim.rightrdsL2(2), stim.rightrdsL2(3)-stim.rightrdsL2(1)-abs(L_R_disp_pp(1)), L_R_disp_pp(2),stim.totalNbDotsRight, stim.dotSizesRight, stim.directionsRight);                   
+%                     end                   
+%                 end
                 
             end
             
@@ -182,29 +189,29 @@ try
 %              coordRightR(2,:,:) = coordRightR(2,:,:) + stim.rightrdsR(2);
            
             %left upper panel, left eye
-             coordLeftL1(1,:,:) = coordLeftL1(1,:,:) + stim.leftrdsL1(1) + xjitter2;
-             coordLeftL1(2,:,:) = coordLeftL1(2,:,:) + stim.leftrdsL1(2);
+             coordLeftL1(1,:,:) = coordLeftL(1,:,:) + stim.leftrdsL1(1) + xjitter2;
+             coordLeftL1(2,:,:) = coordLeftL(2,:,:) + stim.leftrdsL1(2);
             %left upper panel, right eye  
-             coordLeftR1(1,:,:) = coordLeftR1(1,:,:) + stim.leftrdsR1(1) + xjitter2;
-             coordLeftR1(2,:,:) = coordLeftR1(2,:,:) + stim.leftrdsR1(2);
+             coordLeftR1(1,:,:) = coordLeftR(1,:,:) + stim.leftrdsR1(1) + xjitter2;
+             coordLeftR1(2,:,:) = coordLeftR(2,:,:) + stim.leftrdsR1(2);
             %right upper panel, left eye
-             coordRightL1(1,:,:) = coordRightL1(1,:,:) + stim.rightrdsL1(1) + xjitter1;
-             coordRightL1(2,:,:) = coordRightL1(2,:,:) + stim.rightrdsL1(2);
+             coordRightL1(1,:,:) = coordRightL(1,:,:) + stim.rightrdsL1(1) + xjitter1;
+             coordRightL1(2,:,:) = coordRightL(2,:,:) + stim.rightrdsL1(2);
             %right upper panel, right eye
-             coordRightR1(1,:,:) = coordRightR1(1,:,:) + stim.rightrdsR1(1) + xjitter1;
-             coordRightR1(2,:,:) = coordRightR1(2,:,:) + stim.rightrdsR1(2);           
+             coordRightR1(1,:,:) = coordRightR(1,:,:) + stim.rightrdsR1(1) + xjitter1;
+             coordRightR1(2,:,:) = coordRightR(2,:,:) + stim.rightrdsR1(2);           
             %left lower panel, left eye
-             coordLeftL2(1,:,:) = coordLeftL2(1,:,:) + stim.leftrdsL2(1) + xjitter2;
-             coordLeftL2(2,:,:) = coordLeftL2(2,:,:) + stim.leftrdsL2(2);
+             coordLeftL2(1,:,:) = coordLeftL(1,:,:) + stim.leftrdsL2(1) + xjitter2;
+             coordLeftL2(2,:,:) = coordLeftL(2,:,:) + stim.leftrdsL2(2);
             %left lower panel, right eye
-             coordLeftR2(1,:,:) = coordLeftR2(1,:,:) + stim.leftrdsR2(1) + xjitter2;
-             coordLeftR2(2,:,:) = coordLeftR2(2,:,:) + stim.leftrdsR2(2);
+             coordLeftR2(1,:,:) = coordLeftR(1,:,:) + stim.leftrdsR2(1) + xjitter2;
+             coordLeftR2(2,:,:) = coordLeftR(2,:,:) + stim.leftrdsR2(2);
             %right lower panel, left eye
-             coordRightL2(1,:,:) = coordRightL2(1,:,:) + stim.rightrdsL2(1) + xjitter1;
-             coordRightL2(2,:,:) = coordRightL2(2,:,:) + stim.rightrdsL2(2);
+             coordRightL2(1,:,:) = coordRightL(1,:,:) + stim.rightrdsL2(1) + xjitter1;
+             coordRightL2(2,:,:) = coordRightL(2,:,:) + stim.rightrdsL2(2);
             %right lower panel, right eye
-             coordRightR2(1,:,:) = coordRightR2(1,:,:) + stim.rightrdsR2(1) + xjitter1;
-             coordRightR2(2,:,:) = coordRightR2(2,:,:) + stim.rightrdsR2(2);
+             coordRightR2(1,:,:) = coordRightR(1,:,:) + stim.rightrdsR2(1) + xjitter1;
+             coordRightR2(2,:,:) = coordRightR(2,:,:) + stim.rightrdsR2(2);
              
          %--------------------------------------------------------------------------
         %   DISPLAY FRAMES + FIXATION 
@@ -250,8 +257,9 @@ try
 %         end
 
         % Shuffling white and black dots
-        dots1 = Shuffle(1:stim.nbDots1);
-        dots2 = Shuffle(1:stim.nbDots2);
+        dots1 = Shuffle(1:stim.totalNbDotsLeft);
+        dots2 = Shuffle(1:stim.totalNbDotsRight);
+        
         % ---- TIMING CHECKS ---%
              %Missed = 0;  
              timetable=nan(expe.nbFrames,1);
@@ -303,29 +311,29 @@ try
       
              %UPPER PANEL
              %draw half of the dots with dotColor1
-                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR1(:,dots1(1:round(stim.nbDots1/2)),frame), stim.dotSize(1), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1(1:round(stim.totalNbDotsLeft/2)),frame), stim.dotSizesLeft(dots1(1:round(stim.totalNbDotsLeft/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1(1:round(stim.totalNbDotsLeft/2)),frame), stim.dotSizesLeft(dots1(1:round(stim.totalNbDotsLeft/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL1(:,dots2(1:round(stim.totalNbDotsRight/2)),frame), stim.dotSizesRight(dots2(1:round(stim.totalNbDotsRight/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR1(:,dots2(1:round(stim.totalNbDotsRight/2)),frame), stim.dotSizesRight(dots2(1:round(stim.totalNbDotsRight/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
  
               %draw the other half of the dots with dotColor2 (left side) and dotColor3 (right side)
-                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR1(:,dots1((round(stim.nbDots1/2)+1):end),frame), stim.dotSize(1), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL1(:,dots1((round(stim.totalNbDotsLeft/2)+1):end),frame), stim.dotSizesLeft(dots1((round(stim.totalNbDotsLeft/2)+1):end)), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR1(:,dots1((round(stim.totalNbDotsLeft/2)+1):end),frame), stim.dotSizesLeft(dots1((round(stim.totalNbDotsLeft/2)+1):end)), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL1(:,dots2((round(stim.totalNbDotsRight/2)+1):end),frame), stim.dotSizesRight(dots2((round(stim.totalNbDotsRight/2)+1):end)), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR1(:,dots2((round(stim.totalNbDotsRight/2)+1):end),frame), stim.dotSizesRight(dots2((round(stim.totalNbDotsRight/2)+1):end)), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
              
              %LOWER PANEL
              %draw half of the dots with dotColor1
-                   Screen('DrawDots', scr.w, coordLeftL2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR2(:,dots2(1:round(stim.nbDots2/2)),frame), stim.dotSize(2), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL2(:,dots1(1:round(stim.totalNbDotsLeft/2)),frame), stim.dotSizesLeft(dots1(1:round(stim.totalNbDotsLeft/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR2(:,dots1(1:round(stim.totalNbDotsLeft/2)),frame), stim.dotSizesLeft(dots1(1:round(stim.totalNbDotsLeft/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL2(:,dots2(1:round(stim.totalNbDotsRight/2)),frame), stim.dotSizesRight(dots2(1:round(stim.totalNbDotsRight/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR2(:,dots2(1:round(stim.totalNbDotsRight/2)),frame), stim.dotSizesRight(dots2(1:round(stim.totalNbDotsRight/2))), sc(stim.dotColor1,scr),[],scr.antialliasingMode,scr.lenient);
  
               %draw the other half of the dots with dotColor2 (left side) and dotColor3 (right side)
-                   Screen('DrawDots', scr.w, coordLeftL2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordLeftR2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightL2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
-                   Screen('DrawDots', scr.w, coordRightR2(:,dots2((round(stim.nbDots2/2)+1):end),frame), stim.dotSize(2), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftL2(:,dots1((round(stim.totalNbDotsLeft/2)+1):end),frame), stim.dotSizesLeft(dots1((round(stim.totalNbDotsLeft/2)+1):end)), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordLeftR2(:,dots1((round(stim.totalNbDotsLeft/2)+1):end),frame), stim.dotSizesLeft(dots1((round(stim.totalNbDotsLeft/2)+1):end)), sc(stim.dotColor2,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightL2(:,dots2((round(stim.totalNbDotsRight/2)+1):end),frame), stim.dotSizesRight(dots2((round(stim.totalNbDotsRight/2)+1):end)), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
+                   Screen('DrawDots', scr.w, coordRightR2(:,dots2((round(stim.totalNbDotsRight/2)+1):end),frame), stim.dotSizesRight(dots2((round(stim.totalNbDotsRight/2)+1):end)), sc(stim.dotColor3,scr),[],scr.antialliasingMode,scr.lenient);
 
                 %-----fixation
                 %  drawDichFixation(scr,stim);
@@ -434,8 +442,8 @@ try
            drawDichFixation(scr,stim);
            
         %----- big frames around
-            Screen('FrameRect', scr.w, sc(stim.fixL,scr), stim.frameL, stim.frameLineWidth/2);
-            Screen('FrameRect', scr.w, sc(stim.fixR,scr), stim.frameR, stim.frameLineWidth/2);
+         %   Screen('FrameRect', scr.w, sc(stim.fixL,scr), stim.frameL, stim.frameLineWidth/2);
+         %   Screen('FrameRect', scr.w, sc(stim.fixR,scr), stim.frameR, stim.frameLineWidth/2);
 
         [dummy, offsetStim]=flip2(expe.inputMode, scr.w,[],1);
         expe.stimTime= offsetStim-onsetStim;
