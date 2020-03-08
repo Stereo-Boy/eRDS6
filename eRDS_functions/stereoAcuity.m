@@ -35,7 +35,7 @@ function pStereoblind = plotIt(fig,psi)
         correct_resp = psi.history(:,3);
         thres_history = psi.history(:,7);
         slope_history = psi.history(:,5);
-        
+       
         figure(fig)
         %marginalize distributions for plotting
         marg_thr=squeeze(sum(sum(psi.prior(:,:,:,1),3),2));
@@ -54,7 +54,10 @@ function pStereoblind = plotIt(fig,psi)
          xlabel('Thresholds (")')
          title('Posterior for threshold')
          ylabel('Marginalized probability')
-         
+         set(gca, 'YScale', 'log')
+         yticks([1 10 50 100 500 1000 2000])
+         yticklabels({'1' '10' '50' '100' '500' '1000' '2000'})
+       
         subplot(2,3,2) % positive slope estimate distribution
         hold off
          plot(psi.slopes,marg_slo,'k'); hold on
@@ -90,7 +93,7 @@ function pStereoblind = plotIt(fig,psi)
         hold off
         set(gca, 'XScale', 'log')
         xticks([1 10 20 50 100 200 500 1000 2000])
-        xticklabels({'1' '10' '20' '50' '100' '200' '500' '1000' '2000'})
+        xticklabels({'1' '10' '20' '100' '500' '2000'})
 %         %contourf(disparities,psi.thresholds,posterior)
 %         plot(psi.thresholds, posterior)
 %         xlabel('psi.thresholds (log10 arcsec)')
@@ -99,7 +102,7 @@ function pStereoblind = plotIt(fig,psi)
        subplot(2,3,5); % history of threshold estimate
       axis([1 psi.trial psi.xmin psi.xmax])
       hold on
-       plot(psi.history(correct_resp==1,1),psi.history(correct_resp==1,2),'ok')
+       plot(psi.history(correct_resp==1,1),psi.history(correct_resp==1,2),'og')
        plot(psi.history(correct_resp==0,1),psi.history(correct_resp==0,2),'xr')
        plot(1:psi.trial,thres_history,'-b');
        plot([1,psi.trial], [psi.thr_sum psi.thr_sum], '--r')

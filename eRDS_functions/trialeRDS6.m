@@ -351,17 +351,17 @@ try
                   frameList=[frameList,frame]; %use this to count the nb of different frames shown
                   
                %delete the RDS space         
-                    %all of it including center space
-                    if stim.config == 1 % LEFT - RIGHT RDS
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2)-1 stim.rightrdsL(3) stim.rightrdsL(4)+1]); 
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2)-1 stim.rightrdsR(3) stim.rightrdsR(4)+1]); 
-                    elseif stim.config == 2 % CENTER SURROUND
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]); 
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
-                    else
+%                     %all of it including center space
+%                     if stim.config == 1 % LEFT - RIGHT RDS
+%                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2)-1 stim.rightrdsL(3) stim.rightrdsL(4)+1]); 
+%                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2)-1 stim.rightrdsR(3) stim.rightrdsR(4)+1]); 
+%                     elseif stim.config == 2 % CENTER SURROUND
+%                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]); 
+%                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
+%                     else
                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameL); 
                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameR);
-                    end
+%                    end
                     
                     if expe.debugMode==1
                                        Screen('DrawLines',scr.w, [scr.LcenterXLine,scr.LcenterXLine,scr.LcenterXLine-3,scr.LcenterXLine-3,...
