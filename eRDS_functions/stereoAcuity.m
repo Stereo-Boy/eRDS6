@@ -54,9 +54,9 @@ function pStereoblind = plotIt(fig,psi)
          xlabel('Thresholds (")')
          title('Posterior for threshold')
          ylabel('Marginalized probability')
-         set(gca, 'YScale', 'log')
-         yticks([1 10 50 100 500 1000 2000])
-         yticklabels({'1' '10' '50' '100' '500' '1000' '2000'})
+         set(gca, 'XScale', 'log')
+         xticks([1 10 100 500 2000])
+         xticklabels({'1' '10' '100' '500' '2000'})
        
         subplot(2,3,2) % positive slope estimate distribution
         hold off
@@ -112,8 +112,8 @@ function pStereoblind = plotIt(fig,psi)
        text(20, 1000, sprintf('Trials: %d',psi.trial))
        text(20, 700, sprintf('Estimate: %d" (%d")',round(psi.thr_sum),round(psi.threshold)))
        set(gca, 'YScale', 'log')
-       yticks([1 10 50 100 500 1000 2000])
-       yticklabels({'1' '10' '50' '100' '500' '1000' '2000'})
+       yticks([1 5 10 50 100 200 500 1000 2000])
+       yticklabels({'1' '5' '10' '50' '100' '200' '1000' '500' '2000'})
         
        subplot(2,3,6); % history of slope estimate
        hold on;
