@@ -227,7 +227,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         
         %Text properties
          stim.instrPosition = [0,scr.centerY,stim.frameWidth,stim.frameHeight];   % where to show instructions on screen 
-         if scr.lenient==0 && stim.dotSize>scr.maxSmoothPointSize; erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
+         if ((scr.lenient==0) && (stim.dotSize>scr.maxSmoothPointSize)); erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
 
     %--------------------------------------------------------------------------
     %         sounds PARAMETERS
