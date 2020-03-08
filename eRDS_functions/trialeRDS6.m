@@ -359,8 +359,8 @@ try
                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]); 
                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
                     else
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL1(1) stim.outerrdsL1(2)-1 stim.outerrdsL2(3) stim.outerrdsL2(4)+1]); 
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR1(1) stim.outerrdsR1(2)-1 stim.outerrdsR2(3) stim.outerrdsR2(4)+1]);
+                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameL); 
+                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameR);
                     end
                     
                     if expe.debugMode==1
@@ -509,24 +509,31 @@ try
 %                     xx
         
           % clear stimulus space   
-        %all of it including center space
-        if stim.config == 1 % LEFT - RIGHT RDS
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2)-1 stim.rightrdsL(3) stim.rightrdsL(4)+1]);
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2)-1 stim.rightrdsR(3) stim.rightrdsR(4)+1]);
-        elseif stim.config == 2 % CENTER SURROUND
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]);
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
-        else
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL1(1) stim.outerrdsL1(2)-1 stim.outerrdsL2(3) stim.outerrdsL2(4)+1]);
-            Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR1(1) stim.outerrdsR1(2)-1 stim.outerrdsR2(3) stim.outerrdsR2(4)+1]);
-        end
+        %--- Background
+            Screen('FillRect', scr.w, sc(scr.backgr,scr));
+%         %all of it including center space
+%         if stim.config == 1 % LEFT - RIGHT RDS
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2)-1 stim.rightrdsL(3) stim.rightrdsL(4)+1]);
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsR(1) stim.leftrdsR(2)-1 stim.rightrdsR(3) stim.rightrdsR(4)+1]);
+%         elseif stim.config == 2 % CENTER SURROUND
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]);
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
+%         else
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL1(1) stim.outerrdsL1(2)-1 stim.outerrdsL2(3) stim.outerrdsL2(4)+1]);
+%             Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR1(1) stim.outerrdsR1(2)-1 stim.outerrdsR2(3) stim.outerrdsR2(4)+1]);
+%         end
 
-        % ---------------------  RESPONSE --------------------------                  
+        % ------ Outside frames    
+            Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth/2);
+            Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth/2);
+            
+             
         %----- fixation
            drawDichFixation(scr,stim);
-
-
+           
         [dummy, offsetStim]=flip2(expe.inputMode, scr.w,[],1);
+        
+         % ---------------------  RESPONSE --------------------------    
         expe.stimTime= offsetStim-onsetStim;
           if responseKey == 0 
             %--------------------------------------------------------------------------
@@ -669,13 +676,13 @@ catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
     disp(err)
-    save(fullfile(pathExp,'log',[expe.file,'_menu',num2str(expe.menu),'_crashlog']))
+    keyboard
+    save(fullfile(expe.pathExp,'log',[expe.file,'_menu',num2str(expe.menu),'_crashlog']))
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
     PsychPortAudio('Close', sounds.handle1);
     PsychPortAudio('Close', sounds.handle2);
-    keyboard
     rethrow(err);
 end
 

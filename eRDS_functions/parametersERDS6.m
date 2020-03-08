@@ -107,7 +107,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;       
         scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
-        scr.lenient = 0; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need 
+        scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
     %======================================================================
     %              STIMULUS PARAMETERS 
@@ -227,7 +227,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         
         %Text properties
          stim.instrPosition = [0,scr.centerY,stim.frameWidth,stim.frameHeight];   % where to show instructions on screen 
-         if ((scr.lenient==0) && (stim.dotSize>scr.maxSmoothPointSize)); erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
+         if ((scr.lenient==0) && any(stim.dotSize>scr.maxSmoothPointSize)); erri('Your system does not support the requested dot size(',stim.dotSize,' vs. a max of ',scr.maxSmoothPointSize,')'); end
 
     %--------------------------------------------------------------------------
     %         sounds PARAMETERS
