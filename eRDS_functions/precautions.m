@@ -9,13 +9,8 @@ function precautions(w,switcher)
 %
 %================================
 
-%error managment, use warnings function to use this
-%global errorbook 
-
-%Screen('BlendFunction',w, 'GL_ZERO', 'GL_ZERO')
 switch switcher
     case {'on'}
-        %KbName('UnifyKeyNames')
         FlushEvents;
         priorityLevel=MaxPriority(w);
         Priority(priorityLevel);
@@ -34,13 +29,8 @@ switch switcher
         if IsWindows
             ShowHideWinTaskbarMex(1) 
         end
+        Screen('Preference', 'SkipSyncTests', 0);
         sca
-
-%         %clean the error managment
-%         if numel(errorbook)>0
-%             errorbook=cell(1);
-%             errorbook(1,1:2)={'Date and Time' '   Error Book'};
-%         end
 end
 
 end

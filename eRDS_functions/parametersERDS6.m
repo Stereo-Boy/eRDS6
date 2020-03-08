@@ -6,7 +6,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %set the randomness random
     try rng('shuffle'); catch; rand('twister', sum(100*clock)); end
     Screen('Preference', 'SkipSyncTests', 0); % HERE CHANGE TO 0!!!
-    warni('SkipSyncTests: change line 8 to 0')
+    %warning('change line 8 to 0')
     AssertOpenGL; %?
 
     %--------------------------------------------------------------------------
@@ -33,12 +33,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         expe.thx.fr = '====  MERCI  =====';
         expe.thx.en = '=====  THANK YOU  =====';
         expe.verbose = 'verboseON';      % verbose or not (verboseON or verboseOFF)
-        %expe.results = nan(size(expe.nn,1),11);
         expe.language = 'fr';
-        %if isfield(expe,'DE')==0; expe.DE = 2; end          % dominant eye (non-amblyopic) - this one is loaded from DST file
-        expe.allowed_key = [8, 1, 2]; %the escape key is not esc but backspace 
-        expe.allowed_key_locked = [1, 2]; % after escapeTimeLimit, escape key is locked to avoid quitting by mistake
-        expe.current_allowed = expe.allowed_key; 
         %       Response Code Table:
         %               0: no keypress before time limit
         %               1: left 
@@ -99,8 +94,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.backgr=15; %in cd/m2
         scr.keyboardNum=-1; % all available keyboards
         scr.fontSize  = 30; % font size for text drawings
-        %scr.rectwindow = [scr.LcenterXLine-stim.frameWidth/2,scr.LcenterYLine-stim.frameHeight/2,scr.LcenterXLine+stim.frameWidth/2,scr.LcenterYLine+stim.frameHeight/2];
-
+        
         scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
         Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency    
            
@@ -113,7 +107,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;       
         scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
-        scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
+        scr.lenient = 0; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need 
         
     %======================================================================
     %              STIMULUS PARAMETERS 
@@ -129,7 +123,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.fixationDotSizeMin = 11; %in arcmin
              
          % RDS dots        
-         stim.config = 2;                 % orientation of rds stimuli: 1: left - right panels / 2: inside - out 
+         stim.config = 3;                 % orientation of rds stimuli: 1: left - right panels / 2: NOT OPERATIONAL center - surround  / 3 : outer-strip vs central strip
          stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 0.5 0.1
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
@@ -141,26 +135,58 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.dotDensity = [12/100, 2/100]; % in % of area occupied by dots for each dot size, so that size in arcsec x nb dots by degree = 2175/2  
          stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
          stim.overlap = 0; % can dots overlap each other or not? 0 no, 1 yes (if they can overlap, distBetwDots_min does not matter)
-         stim.maxLoadingTime = 10; %in sec, maximum calculation time allowed to find dot coordinates
+         stim.maxLoadingTime = 10; %in sec, maximum calculation time allowed to find dot coordinates %HERE
          stim.coherence = 0/100; % share of dots (in %) that have a coherent motion - careful, coherent motion decreases stereoacuity: Hadani & Vardi, 1987
          stim.speedVA_sec = 0.5; % in VA by sec
           %to be converted in arcsec ?
          stim.polarity = 5; %1 : standard with grey background, 2: white on black background, 3: black on white background, 4: half white+blue/half white+black, %5: grey background, half white, half black
           %  if mod(stim.dotSize,2)~=1; disp('dotsize should be odd');  sca; xx; end
           %  if stim.dotSize<3; disp('dotsize should be greater than 3');  sca; xx; end
-         
-        % RDS width and height / be sure to adapt that so that it is compatible with your screen size and distance
-        % THIS IS THE SIZE OF ONLY ONE RDS space (we have one on the left, one the right)
-         stim.rdsWidthVA = 3.3; %6.5 
-         stim.rdsHeightVA = 8; %6.5
-         stim.rdsInterspaceVA = 0; %space size between RDS in VA
-         
-        %Large box properties (outer frame for fusion)
+          
+         % Large box properties 1 (outer frame for fusion)
          stim.frameLineWidthVA = 0.3; %line width of the frames in VA
          stim.spaceFrameRdsVA = 0.1;    %size of the space between the rds and the outer frame in VA 0.2
-         stim.frameWidthVA = 2*stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.rdsInterspaceVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
-         stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65
-            
+         
+        % RDS width and height / be sure to adapt that so that it is compatible with your screen size and distance
+        
+        if stim.config == 1 % LEFT - RIGHT RDS
+            % THIS IS THE SIZE OF ONLY ONE RDS space (we have one on the left, one the right)
+             stim.rdsWidthVA = 3.3; %6.5 
+             stim.rdsInterspaceVA = 0; %space size between RDS in VA
+             stim.rdsHeightVA = 8; %6.5
+             
+            % Large box properties 2 (outer frame for fusion)         
+             stim.frameWidthVA = 2*stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.rdsInterspaceVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
+             stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65        
+             stim.patterning = 1; % 0: no patterning; 1: we split the area in two and just copy the dots from top area to bottom area; 2: mirror them vertically
+        elseif stim.config == 2 %CENTER - SURROUND RDS
+             stim.rdsWidthVA = 6.6;    % width of surround rds (its height is stim.rdsHeightVA)
+             stim.rdsCenterSizeVA = 3; % width and height for central rds
+             stim.rdsHeightVA = 8; %6.5
+            % Large box properties 2 (outer frame for fusion)     
+             stim.frameWidthVA = stim.rdsWidthVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
+             stim.frameHeightVA = stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65             
+             stim.patterning = 2; % 0: no patterning; 1: we split the area in two and just copy the dots from top area to bottom area; 2: mirror them vertically
+        elseif stim.config == 3 % CENTRAL STRIP - OUTER STRIPS
+             stim.rdsWidthVA = 6.6;    % width of surround rds 
+             stim.rdsHeightVA = 2.7; %6.5 % THIS IS FOR ONE STRIP (out of 3)
+             %stim.rdsInterspaceVA = 0; %space size between RDS in VA
+             
+             % Large box properties 2 (outer frame for fusion)     
+             stim.frameWidthVA = stim.rdsWidthVA + stim.frameLineWidthVA; % witdth of the outside frame in deg 10.65
+             stim.frameHeightVA = 3*stim.rdsHeightVA + 2*stim.spaceFrameRdsVA + stim.frameLineWidthVA; %in deg 18.65      + 2*stim.rdsInterspaceVA       
+             stim.patterning = 1; % 0: no patterning; 1: we split the area in two and just copy the dots from top area to bottom area; 2: mirror them vertically
+        end
+        
+        if stim.config == 1
+            expe.allowed_key = [8, 1, 2]; %the escape key is not esc but backspace 
+            expe.allowed_key_locked = [1, 2]; % after escapeTimeLimit, escape key is locked to avoid quitting by mistake
+        else
+            expe.allowed_key = [8, 5, 6]; %the escape key is not esc but backspace 
+            expe.allowed_key_locked = [5, 6]; % after escapeTimeLimit, escape key is locked to avoid quitting by mistake
+        end
+        expe.current_allowed = expe.allowed_key; 
+        
     %--------------------------------------------------------------------------
     % TIMING (All times are in MILLISECONDS)
     %--------------------------------------------------------------------------
@@ -170,7 +196,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.flashDuration  = 400;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
          if mod(stim.itemDuration,stim.flashDuration)~=0; warni('Stimulus duration is not a factor of flash duration. For precision, it could be...')
              warni('...wise to adjust stim.itemDuration by ',mod(stim.itemDuration,stim.flashDuration),'ms'); end
-         stim.interTrial   = 0;           % Minimal ISI in ms
+         stim.interTrial   = 0;           % Minimal ISI in ms - entirely determined by calculation time
     %--------------------------------------------------------------------------   
 
 % ============================================
@@ -185,12 +211,16 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         stim.rdsHeight=round(convertVA2px(stim.rdsHeightVA));
         stim.frameWidth = round(convertVA2px(stim.frameWidthVA));
         stim.frameHeight = round(convertVA2px(stim.frameHeightVA));
-        stim.rdsInterspace = round(convertVA2px(stim.rdsInterspaceVA)); 
+        if stim.config == 1; stim.rdsInterspace = round(convertVA2px(stim.rdsInterspaceVA)); end
         stim.speed = convertVA2px(stim.speedVA_sec); % in pp by sec
         stim.ppByFlash = ((stim.speed./1000).*stim.flashDuration); % in pp by flash 
         stim.distBetwDots = round(convertVA2px(stim.distBetwDots_min/60));
         stim.dotSize = round(convertVA2px(stim.dotSizeVA)); % in pp
-        %if mod(stim.dotSize,2)~=0; disp('Correcting: stim.dotSize should be even - removing 1pp');  stim.dotSize=stim.dotSize-1; end
+        if stim.config == 2
+            stim.rdsCenterSize = round(convertVA2px(stim.rdsCenterSizeVA)); 
+            if mod(stim.rdsCenterSize,2)~=0; disp('Correcting: stim.rdsCenterSize should be even - removing 1pp');  stim.rdsCenterSize=stim.rdsCenterSize-1; end
+        end
+        if mod(stim.rdsHeight,2)~=0; disp('Correcting: stim.rdsHeight should be even - removing 1pp');  stim.rdsHeight=stim.rdsHeight-1; end
         if mod(stim.rdsWidth,2)~=0; disp('Correcting: stim.rdsWidth should be even - removing 1pp');  stim.rdsWidth=stim.rdsWidth-1; end
         if mod(stim.frameWidth,2)~=0; disp('Correcting: stim.frameWidth should be even - adding 1pp');  stim.frameWidth=stim.frameWidth+1; end
         if mod(stim.frameHeight,2)~=0; disp('Correcting: stim.frameHeight should be even - adding 1pp');  stim.frameHeight=stim.frameHeight+1; end
@@ -216,22 +246,22 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %--------------------------------------------------------------------------
     %   PSI algorithm parameters
     %----------------------------------------------------------------------------
-        psi.xmin= 3; %minimal disparity possible in arcsec (cannot measure thresholds below that value!)
+        psi.xmin= 3; %minimal disparity possible in arcsec (cannot measure thresholds below that value!) % adding 0.5, 1, 1.5, 2 and 2.5 though
         psi.x1 = 1200;
         psi.x2 = 1400;
         psi.xmax = 3000; %max one (cannot measure thresholds above that value!)
         psi.xstep1 = 0.001; %step size for sampling in log unit 0.05
         psi.xstep2 = 0.001;
-        psi.disparities = [log10(psi.xmin):psi.xstep1:log10(psi.x1),log10(psi.x1):psi.xstep2:log10(psi.x2),...
+        psi.disparities = [log10(0.5:0.5:2.5),log10(psi.xmin):psi.xstep1:log10(psi.x1),log10(psi.x1):psi.xstep2:log10(psi.x2),...
             log10(psi.x2):psi.xstep1:log10(psi.xmax)]; %range of possible values for disparities x, in log10(arcsec)
         
-        psi.tmin = 3; % minimal threshold that we parametrized
+        psi.tmin = 3; % minimal threshold that we parametrized % adding 0.5, 1, 1.5, 2 and 2.5 though
         psi.t1 = 1000;
         psi.t2 = 1600;
         psi.tmax = 2200; % maximal threshold that we parametrized  
         psi.tstep1 = 0.04; %step size for this parameter in log unit 0.05
         psi.tstep2 = 0.04;
-        psi.thresholds = [log10(psi.tmin):psi.tstep1:log10(psi.t1),log10(psi.t1):psi.tstep2:log10(psi.t2),...
+        psi.thresholds = [log10(0.5:0.5:2.5),log10(psi.tmin):psi.tstep1:log10(psi.t1),log10(psi.t1):psi.tstep2:log10(psi.t2),...
             log10(psi.t2):psi.tstep1:log10(psi.tmax),log10(100000)]; %range of possible values for thresholds T, in log10(arcsec)
         
         psi.slopes = [0.2,0.4,0.8,1.6,3.2]; %range of possible values for slope s

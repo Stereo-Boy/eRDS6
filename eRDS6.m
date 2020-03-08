@@ -11,9 +11,11 @@ function eRDS6
 % Long presentations (2 sec) allows for a better threshold using vergence
 % and eye movements. 
 % Stimulus are two identical rectangular surface-RDS with a frame around
-% and a fixation cross in the center. Dots are white and black.
-% Either the left or the right surface is in front of the other and the task 
+% and a fixation cross in the center. Dots are white and black or blue and black.
+% In one configuration, either the left or the right surface is in front of the other and the task 
 % is to indicate which one (2AFC).
+% In another configuration, either the central or the outer stripes are in front of the others and the task 
+% is to indicate whether the blue dots one is closer or further (2AFC).
 % Instead of a constant stimuli paradigm, we use an adaptation of Psi (Kontsevich & Tyler, 1999)
 % bayesian algorithm to non-monotonic psychometric functions. Indeed, we
 % also use marginalization of nuisance parameters following Prins (2013)
@@ -23,11 +25,12 @@ function eRDS6
 % stereoscope appropriately and ensure fusion.
 %
 % Changes in version 6
-%   - now a left-right task to prevent strategies
+%   - now a left-right task to prevent strategies / or central-outer stips
 %   - no eye tracking mode anymore
 %   - super-imposition of dots is not allowed anymore following Read &
-%   Cumming (2018)
-%   - drawCircle is used rather than drawDots to avoid limitation on dot size
+%   Cumming (2018) and 10 arcmin of minimal distance is enforced to avoid
+%   stereo crowding
+%   - drawDots is used with anti-aliasing
 %   - does not support pedestals anymore
 %   - use of Psi for non-monotonic functions rather than constant stimuli
 %   - larger possible disparities
@@ -36,14 +39,14 @@ function eRDS6
 %   - load a screen calibration file with screen parameters located in screen folder
 %
 % Properties:
-%   - only 25 practice trials, always embedded in the test
+%   - only 24 practice trials, always embedded in the test
 %   - 10 additionnal practice trials possible, to run first
 %   - menu options with 200ms or 2000 ms test without eyetracking
 %
 % Stimulus sequence: 
 %   -nonius + fixation frame
 %   -RDS [+fixation frame] - stays for 200ms or 2000ms
-%   -response (left or right array key)
+%   -response
 %   -ISI
 %
 %   - most parameters are controled in the globalParameters file except for
@@ -63,24 +66,25 @@ try
   clc
   disp(' ------------    eRDS ------------------')  
   %add path to functions and define some folder paths, check that they exist, start a log file
-    [eRDSpath,~]=fileparts(mfilename('fullpath')); %path to erds folder
-    funpath = fullfile(eRDSpath,'eRDS_functions'); %path to common functions
-    if exist(funpath,'dir')==7; addpath(funpath); else; disp('Function folder does not exist:'); disp(funpath); end %add that path to use these functions
-    rootpath = fileparts(eRDSpath); % path where both eRDS and DST folders should be present
-    DSTpath = fullfile(rootpath,'DST8','dataFiles'); % dst datafile path
-    logpath = fullfile(eRDSpath,'log'); % log file path
-    datapath = fullfile(eRDSpath,'dataFiles'); % path to the datafile folder
-    screenpath = fullfile(eRDSpath,'screen'); % path to the screen folder 
-    expe.soundpath = fullfile(eRDSpath,'sound'); % path to the sound folder 
-    check_folder(logpath,1,'verboseON');
-    diary(fullfile(logpath,[sprintf('%02.f_',fix(clock)),'eRDS.txt']));
+    [expe.eRDSpath,~]=fileparts(mfilename('fullpath')); %path to erds folder
+    expe.funpath = fullfile(expe.eRDSpath,'eRDS_functions'); %path to common functions
+    if exist(expe.funpath,'dir')==7; addpath(expe.funpath); else; disp('Function folder does not exist:'); disp(expe.funpath); end %add that path to use these functions
+    expe.rootpath = fileparts(expe.eRDSpath); % path where both eRDS and DST folders should be present
+    expe.DSTpath = fullfile(expe.rootpath,'DST8','dataFiles'); % dst datafile path
+    expe.logpath = fullfile(expe.eRDSpath,'log'); % log file path
+    expe.datapath = fullfile(expe.eRDSpath,'dataFiles'); % path to the datafile folder
+    expe.screenpath = fullfile(expe.eRDSpath,'screen'); % path to the screen folder 
+    expe.soundpath = fullfile(expe.eRDSpath,'sound'); % path to the sound folder 
+    check_folder(expe.logpath,1,'verboseON');
+    diary(fullfile(expe.logpath,[sprintf('%02.f_',fix(clock)),'eRDS.txt']));
     diary ON
-    check_folder(rootpath,1,'verboseON');
-    check_folder(DSTpath,1,'verboseON');
-    check_folder(datapath,1,'verboseON');
-    check_folder(screenpath,1,'verboseON');
+    check_folder(expe.rootpath,1,'verboseON');
+    check_folder(expe.DSTpath,1,'verboseON');
+    check_folder(expe.datapath,1,'verboseON');
+    check_folder(expe.screenpath,1,'verboseON');
     check_folder(expe.soundpath,1,'verboseON');
-    addpath(screenpath); % so that we can load the screen parameters from there
+    addpath(expe.screenpath); % so that we can load the screen parameters from there
+    expe.dateTime = dateTime;
     disp(dateTime)
     
     %=================      MENU     ===========================================
@@ -106,7 +110,7 @@ try
     end
     %=================== DEFINE ALL MANUALLY INPUT PARAMETERS ================
         if expe.menu~=1 && expe.menu~=3 && expe.menu~=7 && expe.menu~=8      
-            expe.name=nameInput(datapath);  %erds datafile name
+            expe.name=nameInput(expe);  %erds datafile name
             %expe.DE=str2double(input('Dominant (non-amblyopic) eye (1 for Left; 2 for Right):  ', 's')); %dominant eye
         end
         if expe.menu~=1 && expe.menu~=7 && expe.menu~=8    
@@ -149,6 +153,7 @@ try
             expe.inputMode = 2;
             stim.itemDuration = 0.00001;
             stim.interTrial = 0.00001;   
+            expe.feedback = 0;
         case 8
             dispi('Check mode uses some default values')
             expe.quickMode = 1; 
@@ -161,14 +166,13 @@ try
         % the actual total number of trials is two times expe.nn because we adds near and far trials.
     expe.results = nan(size(2*expe.nn,1),11);
     expe.timings = nan(size(2*expe.nn,1),6);
-    %HERE COULD DO A LAST CHECK WITH SCREEN
     
     %--------------------------------------------------------------------------
     % load contrast and position information from the DST calibration
     %--------------------------------------------------------------------------
-      check_files(DSTpath, [expe.nameDST,'.mat'], 1, 1, expe.verbose)
+      check_files(expe.DSTpath, [expe.nameDST,'.mat'], 1, 1, expe.verbose)
       dispi('Loading DST file ',expe.nameDST)
-      load(fullfile(DSTpath, [expe.nameDST,'.mat']),'DE','leftContr','rightContr', 'leftUpShift', 'rightUpShift', 'leftLeftShift', 'rightLeftShift')
+      load(fullfile(expe.DSTpath, [expe.nameDST,'.mat']),'DE','leftContr','rightContr', 'leftUpShift', 'rightUpShift', 'leftLeftShift', 'rightLeftShift')
       expe.leftContr = leftContr; expe.rightContr =rightContr; expe.leftUpShift =leftUpShift; expe.rightUpShift =rightUpShift;
       expe.leftLeftShift=leftLeftShift; expe.rightLeftShift=rightLeftShift; expe.DE = DE;
     
@@ -247,6 +251,10 @@ try
             stim.dotColor2 = stim.maxLum; %white dots
             stim.dotColor3 = [stim.maxLum/2, stim.maxLum, stim.maxLum]; %blueish dots
      end
+     if stim.config == 3 % WORKS ONLY WITH POLARITY 5 - please keep it that way
+         stim.white = stim.dotColor2;
+         stim.blue = stim.dotColor3;
+     end
      
      % outer frames (for fusion) space
             stim.leftFrameLum = stim.LminL;
@@ -254,7 +262,8 @@ try
             stim.frameL = [scr.LcenterXLine-stim.frameWidth/2,scr.LcenterYLine-stim.frameHeight/2,scr.LcenterXLine+stim.frameWidth/2,scr.LcenterYLine+stim.frameHeight/2];
             stim.frameR = [scr.RcenterXLine-stim.frameWidth/2,scr.RcenterYLine-stim.frameHeight/2,scr.RcenterXLine+stim.frameWidth/2,scr.RcenterYLine+stim.frameHeight/2];
      
-     %---- RDS SPACE             
+     %---- RDS SPACE    
+     if stim.config == 1 % LEFT - RIGHT RDS
         %defines space to be drawn inside with dots (left and right panels)
             stim.leftrdsL = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight); %left eye
             stim.leftrdsR = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);  %right eye
@@ -269,6 +278,30 @@ try
             stim.leftrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.rightrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
             stim.rightrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+     elseif stim.config == 2 %CENTER - SURROUND RDS
+         %defines space to be drawn inside with dots (left and right panels)
+            stim.centerrdsL = centerSizedAreaOnPx(scr.LcenterXDot, scr.LcenterYDot, stim.rdsCenterSize, stim.rdsCenterSize); %left eye
+            stim.centerrdsR = centerSizedAreaOnPx(scr.RcenterXDot, scr.RcenterYDot, stim.rdsCenterSize, stim.rdsCenterSize);  %right eye
+            stim.outerrdsL = centerSizedAreaOnPx(scr.LcenterXDot, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight);
+            stim.outerrdsR = centerSizedAreaOnPx(scr.RcenterXDot, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);
+%         % split the working area in two areas vertically, that will show the same dots (for speed)
+%             stim.leftrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2); %left eye
+%             stim.leftrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2); %right eye
+%             stim.rightrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+%             stim.rightrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot-stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+%             stim.leftrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+%             stim.leftrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot-(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+%             stim.rightrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.LcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);
+%             stim.rightrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot+(stim.rdsWidth+stim.rdsInterspace)/2, scr.RcenterYDot+stim.rdsHeight/4, stim.rdsWidth, stim.rdsHeight/2);   
+     elseif stim.config == 3 % CENTRAL STRIP - OUTER STRIPS
+         %defines space to be drawn inside with dots (central and outer strips)
+            stim.centerrdsL = centerSizedAreaOnPx(scr.LcenterXDot, scr.LcenterYDot, stim.rdsWidth, stim.rdsHeight); %left eye
+            stim.centerrdsR = centerSizedAreaOnPx(scr.RcenterXDot, scr.RcenterYDot, stim.rdsWidth, stim.rdsHeight);  %right eye
+            stim.outerrdsL1 = centerSizedAreaOnPx(scr.LcenterXDot, scr.LcenterYDot - stim.rdsHeight, stim.rdsWidth, stim.rdsHeight);
+            stim.outerrdsR1 = centerSizedAreaOnPx(scr.RcenterXDot, scr.RcenterYDot - stim.rdsHeight, stim.rdsWidth, stim.rdsHeight);
+            stim.outerrdsL2 = centerSizedAreaOnPx(scr.LcenterXDot, scr.LcenterYDot + stim.rdsHeight, stim.rdsWidth, stim.rdsHeight);
+            stim.outerrdsR2 = centerSizedAreaOnPx(scr.RcenterXDot, scr.RcenterYDot + stim.rdsHeight, stim.rdsWidth, stim.rdsHeight);
+     end
      
          disp('Expe structure: ');disp(expe);
          disp('Scr structure: ');disp(scr);
@@ -285,7 +318,6 @@ try
        psi1 = psi; psi1.sign = 'near'; % near disparities
        psi2 = psi; psi2.sign = 'far';  % far disparities
        clear psi;
-       sign_list = Shuffle([ones(1,expe.nn),zeros(1,expe.nn)]);
        stopSignal = 0;
        if expe.menu==8 % CHECKS
            Screen('FillRect',scr.w, sc(scr.backgr,scr));
@@ -350,6 +382,7 @@ try
            waitForKey(scr.keyboardNum,expe.inputMode);
            [expe, psi1, stopSignal]=trialeRDS6(1,stim,scr,expe,sounds,psi1);    
        else %ACTUAL TEST
+           sign_list = Shuffle([ones(1,expe.nn),zeros(1,expe.nn)]);
            for trial=1:(2*expe.nn)
                    if sign_list(trial) == 0
                         [expe, psi1, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi1);
@@ -380,31 +413,30 @@ try
             end
             clear psi
             expe.resultsLabels = {'trial ID', 'left disparity (")', 'right disparity (")','expected response', 'response','presentation duration','RT','correct',...
-                'left disparity (pp)', 'right disparity (pp)','practice?'};
+                'left disparity (pp)', 'right disparity (pp)','practice?','blue dots'};
             expe.timingsLabels={}; %HERE
             if stopSignal==1
-                save(fullfile(logpath,[expe.name,'-crashlog']))
+                save(fullfile(expe.logpath,[expe.name,'_crashlog']))
             else
-                save(fullfile(datapath,expe.name))
+                save(fullfile(expe.datapath, [expe.name,'_menu',expe.menu]))
             end
 
         %===== QUIT =====%
             precautions(scr.w, 'off');
-            changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz);
-            diary OFF       
+            changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz);    
            
             disp('==========================================')
             disp('         Results')
             dispi('Duration:',round((GetSecs-expe.startTime)/60,1));
             if isfield(psi1, 'threshold')
-                stereoAcuity(fullfile(datapath,expe.name))
+                stereoAcuity(fullfile(expe.datapath,[expe.name,'_menu',expe.menu,'.mat']))
             else
                 disp('No threshold detected in psi structure.')
             end
+            diary OFF 
 catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
-    keyboard
     if exist('sounds','var'); PsychPortAudio('Close', sounds.handle1); end
     if exist('sounds','var'); PsychPortAudio('Close', sounds.handle2); end
     disp(err)
@@ -416,7 +448,8 @@ catch err   %===== DEBUGING =====%
         psi2=rmfield(psi2,'tt'); psi2=rmfield(psi2,'ss'); psi2=rmfield(psi2,'ll'); psi2=rmfield(psi2,'xx');
         psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
     end
-    if exist('scr','var'); save(fullfile(logpath,[expe.name,'-crashlog'])); end
+    keyboard
+    if exist('scr','var'); save(fullfile(expe.logpath,[expe.name,'_crashlog'])); end
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end

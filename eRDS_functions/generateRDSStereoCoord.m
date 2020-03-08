@@ -21,6 +21,10 @@ function [coordL, coordR] = generateRDSStereoCoord(coordL, coordR, stim, heightp
 %       1:  x, y
 %       2:  dot
 %       3:  frame
+%  stim.patterning - 0: no patterning; 1: we split the area in two and just
+%  copy the dots from top area to bottom area; 2: mirror them vertically -
+%  this increases speed given it takes less time to find appropriate dots
+
 try
     
 max_hdot_size = round(max(dotSizes)/2);
@@ -31,7 +35,9 @@ max_hdot_size = round(max(dotSizes)/2);
 % We only draw on half of the height and then duplicate the panel (to
 % increase computation speed)
  [xArea, yArea] = meshgrid(max_hdot_size:floor(widthpp-max_hdot_size), max_hdot_size:floor(heightpp/2-max_hdot_size)); 
- nbDots = nbDots/2;
+ 
+ if stim.patterning>0;     nbDots = nbDots/2; end
+ 
  directions = directions(1:nbDots);
  dotSizes = dotSizes(1:nbDots);
  xAreaLine=xArea(:); yAreaLine = yArea(:);
@@ -46,9 +52,11 @@ if isempty(coordL)==1
     coordR = [xAreaLine(chosenDots)'+ disparity/2; yAreaLine(chosenDots)'];
     %[coordL, coordR]= avoidOverlap(coordL,coordR,xAreaLine,yAreaLine,stim,disparity);
 else
-    % we work only with the top panel of dots, that we duplicate then
-    coordL = coordL(:,1:(size(coordL,2)/2));
-    coordR = coordR(:,1:(size(coordR,2)/2));
+    if stim.patterning > 0
+        % we work only with the top panel of dots, that we duplicate then
+        coordL = coordL(:,1:(size(coordL,2)/2));
+        coordR = coordR(:,1:(size(coordR,2)/2));
+    end
 end
 
 % apply the direction to the frame step to get motion vectors
@@ -72,13 +80,19 @@ while overlap==1 || outOfLimits==1 % we avoid them jointly because avoiding one 
     [coordL, coordR, outOfLimits, possibleDots]= avoidOutOfLimits(coordL,coordR,xAreaLine,yAreaLine,disparity,stim,dotSizes,possibleDots,widthpp,heightpp);
 end
 
-    
-% now duplicate the panel and put one below the other
-coordL2 = coordL; coordL2(2,:) = coordL2(2,:) + heightpp/2;
-coordL = [coordL, coordL2];
-coordR2 = coordR; coordR2(2,:) = coordR2(2,:) + heightpp/2;
-coordR = [coordR, coordR2];
-
+if stim.patterning == 1 
+    % now duplicate the panel and put one below the other
+    coordL2 = coordL; coordL2(2,:) = coordL2(2,:) + heightpp/2;
+    coordL = [coordL, coordL2];
+    coordR2 = coordR; coordR2(2,:) = coordR2(2,:) + heightpp/2;
+    coordR = [coordR, coordR2];
+elseif stim.patterning == 2
+    % now duplicate the panel and put one below the other
+    coordL2 = coordL; coordL2(2,:) = heightpp - coordL2(2,:);
+    coordL = [coordL, coordL2];
+    coordR2 = coordR; coordR2(2,:) = heightpp - coordR2(2,:);
+    coordR = [coordR, coordR2];
+end
 
 catch err  % DEBUGGING
     sca
