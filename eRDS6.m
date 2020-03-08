@@ -416,7 +416,7 @@ try
                 'left disparity (pp)', 'right disparity (pp)','practice?','blue dots'};
             expe.timingsLabels={}; %HERE
             if stopSignal==1
-                save(fullfile(expe.logpath,[expe.name,'_crashlog']))
+                save(fullfile(expe.logpath,[expe.name,'_menu',num2str(expe.menu),'_crashlog']))
             else
                 save(fullfile(expe.datapath, [expe.name,'_menu',num2str(expe.menu)]))
             end
@@ -429,7 +429,7 @@ try
             disp('         Results')
             dispi('Duration:',round((GetSecs-expe.startTime)/60,1));
             if isfield(psi1, 'threshold')
-                stereoAcuity(fullfile(expe.datapath,[expe.name,'_menu',expe.menu,'.mat']))
+                stereoAcuity(fullfile(expe.datapath,[expe.name,'_menu',num2str(expe.menu),'.mat']))
             else
                 disp('No threshold detected in psi structure.')
             end
@@ -449,7 +449,7 @@ catch err   %===== DEBUGING =====%
         psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
     end
     keyboard
-    if exist('scr','var'); save(fullfile(expe.logpath,[expe.name,'_crashlog'])); end
+    if exist('scr','var'); save(fullfile(expe.logpath,[expe.name,'_menu',num2str(expe.menu),'_crashlog'])); end
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end

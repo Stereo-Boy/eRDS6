@@ -595,8 +595,8 @@ try
                 else
                     %INCORRECT
                     psi.correct = 0;
-                    %if expe.feedback == 1 || (expe.feedback == 2 && psi.practice_trial==1) %meaningful auditory feedback
-                    if expe.feedback == 1 || expe.feedback == 2 %HERE remove that line and take line above
+                    if expe.feedback == 1 || (expe.feedback == 2 && psi.practice_trial==1) %meaningful auditory feedback
+                    %if expe.feedback == 1 || expe.feedback == 2 %HERE remove that line and take line above
                         PsychPortAudio('Start', sounds.handle2, 1, 0, 1);
                     else    %keypress auditory feedback
                         PsychPortAudio('Start', sounds.handle1, 1, 0, 1);

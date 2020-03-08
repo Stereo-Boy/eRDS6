@@ -5,7 +5,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     
     %set the randomness random
     try rng('shuffle'); catch; rand('twister', sum(100*clock)); end
-    Screen('Preference', 'SkipSyncTests', 0); % HERE CHANGE TO 0!!!
+    Screen('Preference', 'SkipSyncTests', 2); % HERE CHANGE TO 0!!!
     %warning('change line 8 to 0')
     AssertOpenGL; %?
 
@@ -124,7 +124,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
              
          % RDS dots        
          stim.config = 3;                 % orientation of rds stimuli: 1: left - right panels / 2: NOT OPERATIONAL center - surround  / 3 : outer-strip vs central strip
-         stim.dotSizeVA = [0.5, 0.1];    % needs two sizes here 0.5 0.1
+         stim.dotSizeVA = [0.5, 0.1];    % needs two sizes 0.5 0.1
          % size for a dot in visual angle (can be a list of dot sizes)
          % Ideally it would be:
          % 0.5 VA, which is optimal according to Ding & Levi, 2011, Fig. 3B for participants with strabismus
