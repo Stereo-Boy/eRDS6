@@ -418,7 +418,7 @@ try
             if stopSignal==1
                 save(fullfile(expe.logpath,[expe.name,'_crashlog']))
             else
-                save(fullfile(expe.datapath, [expe.name,'_menu',expe.menu]))
+                save(fullfile(expe.datapath, [expe.name,'_menu',num2str(expe.menu)]))
             end
 
         %===== QUIT =====%

@@ -669,7 +669,7 @@ catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
     disp(err)
-    save(fullfile(pathExp,'log',[expe.file,'_crashlog']))
+    save(fullfile(pathExp,'log',[expe.file,'_menu',num2str(expe.menu),'_crashlog']))
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
