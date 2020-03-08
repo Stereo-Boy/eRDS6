@@ -9,9 +9,12 @@ function stereoAcuity(filepath)
 %   4-6     current estimates for thres / slope / neg_slope using sum method
 %   7      final 75% threshold estimate using sum parameters
 %   8       trial # (different from psi.trial)
-load(filepath,'psi1','psi2')
+load(filepath,'psi1','psi2','expe')
 
 pStereoblind1 = plotIt(1,psi1);
+[~, name] = fileparts(filepath);
+dispi('Data: ',name)
+dispi('Duration: ',round(expe.duration,1),' min')
 disp('-------------------------------------------------------')
 dispi('    ',psi1.sign,' disparities')
 disp('-------------------------------------------------------')

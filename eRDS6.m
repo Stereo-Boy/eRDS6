@@ -402,7 +402,7 @@ try
             waitForKey(scr.keyboardNum,expe.inputMode);
             
             %===== SAVE ===%
-            expe.time = (GetSecs-expe.startTime)/60;
+            expe.duration = (GetSecs-expe.startTime)/60;
             if isfield(psi1,'tt')
                 psi1=rmfield(psi1,'tt'); psi1=rmfield(psi1,'ss'); psi1=rmfield(psi1,'ll'); psi1=rmfield(psi1,'xx');
                 psi1=rmfield(psi1,'likelihoodCR'); psi1=rmfield(psi1,'likelihoodFail'); psi1=rmfield(psi1,'postFail'); psi1=rmfield(psi1,'postCR');
