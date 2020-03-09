@@ -5,7 +5,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     
     %set the randomness random
     try rng('shuffle'); catch; rand('twister', sum(100*clock)); end
-    Screen('Preference', 'SkipSyncTests', 2); % HERE CHANGE TO 0!!!
+    Screen('Preference', 'SkipSyncTests', 0); % HERE CHANGE TO 0!!!
     %warning('change line 8 to 0')
     AssertOpenGL; %?
 
@@ -107,7 +107,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;       
         scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
-        scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
+        scr.lenient = 0; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
     %======================================================================
     %              STIMULUS PARAMETERS 
@@ -251,7 +251,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         psi.x2 = 1400;
         psi.xmax = 3000; %max one (cannot measure thresholds above that value!)
         psi.xstep1 = 0.001; %step size for sampling in log unit 0.05
-        psi.xstep2 = 0.001;
+        psi.xstep2 = 0.0005;
         psi.disparities = [log10(0.5:0.5:2.5),log10(psi.xmin):psi.xstep1:log10(psi.x1),log10(psi.x1):psi.xstep2:log10(psi.x2),...
             log10(psi.x2):psi.xstep1:log10(psi.xmax)]; %range of possible values for disparities x, in log10(arcsec)
         

@@ -8,7 +8,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 %           - choose next stimulus depending on psi algorithm
 %=======================================================================
 
-try
+%try
 %--------------------------------------------------------------------------
 %   STIM - RESP LOOP
 %--------------------------------------------------------------------------  
@@ -672,19 +672,19 @@ try
 %end %subpixel
 % for j=1:11; plot(mean(im2(25,14:20,:,j),3)); hold on; end %subpixel
 
-catch err   %===== DEBUGING =====%
-    sca
-    ShowHideWinTaskbarMex
-    disp(err)
-    keyboard
-    save(fullfile(expe.pathExp,'log',[expe.file,'_menu',num2str(expe.menu),'_crashlog']))
-    if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
-    diary OFF
-    if exist('scr','var'); precautions(scr.w, 'off'); end
-    PsychPortAudio('Close', sounds.handle1);
-    PsychPortAudio('Close', sounds.handle2);
-    rethrow(err);
-end
+% catch err   %===== DEBUGING =====%
+%     sca
+%     ShowHideWinTaskbarMex
+%     disp(err)
+%     keyboard
+%     save(fullfile(expe.pathExp,'log',[expe.file,'_menu',num2str(expe.menu),'_crashlog']))
+%     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
+%     diary OFF
+%     if exist('scr','var'); precautions(scr.w, 'off'); end
+%     PsychPortAudio('Close', sounds.handle1);
+%     PsychPortAudio('Close', sounds.handle2);
+%     rethrow(err);
+% end
 
 end
 
