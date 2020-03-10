@@ -131,13 +131,11 @@ try
             expe.practiceTrials = 10; 
             expe.name = 'default';
             expe.nameDST = 'default';
-        case 2
         case 3
             expe.feedback = 1;
             expe.nbTrials = 0;
             expe.practiceTrials = 5;
             expe.name = 'practice';
-        case 4
         case 5
             stim.itemDuration = 200;
         case 6
@@ -165,7 +163,7 @@ try
     expe.nn = expe.nbTrials+expe.practiceTrials; % number of trials in total (for either the near or the far disparities)
         % the actual total number of trials is two times expe.nn because we adds near and far trials.
     expe.results = nan(size(2*expe.nn,1),11);
-    expe.timings = nan(size(2*expe.nn,1),6);
+    expe.timings = nan(size(2*expe.nn,1),7);
     
     %--------------------------------------------------------------------------
     % load contrast and position information from the DST calibration
@@ -412,9 +410,9 @@ try
                 psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
             end
             clear psi
-            expe.resultsLabels = {'trial ID', 'left disparity (")', 'right disparity (")','expected response', 'response','presentation duration','RT','correct',...
-                'left disparity (pp)', 'right disparity (pp)','practice?','blue dots'};
-            expe.timingsLabels={}; %HERE
+            expe.resultsLabels = {'trial ID', 'central strip disparity (")', 'lateral strip disparity (")','expected response', 'response',...
+                'presentation duration','RT','correct', 'central strip disparity (pp)', 'lateral strip disparity (pp)','practice?','blue dots'};
+            expe.timingsLabels={'calculation','fixation','frame duration','flash duration','stimulus duration','RT','ISI'}; %HERE
             if stopSignal==1
                 save(fullfile(expe.logpath,[expe.name,'_menu',num2str(expe.menu),'_crashlog']))
             else
@@ -448,10 +446,11 @@ catch err   %===== DEBUGING =====%
         psi2=rmfield(psi2,'tt'); psi2=rmfield(psi2,'ss'); psi2=rmfield(psi2,'ll'); psi2=rmfield(psi2,'xx');
         psi2=rmfield(psi2,'likelihoodCR'); psi2=rmfield(psi2,'likelihoodFail'); psi2=rmfield(psi2,'postFail'); psi2=rmfield(psi2,'postCR');
     end
-   % keyboard
+    %keyboard
     if exist('scr','var'); save(fullfile(expe.logpath,[expe.name,'_menu',num2str(expe.menu),'_crashlog'])); end
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
+    rethrow(err)
 end
 

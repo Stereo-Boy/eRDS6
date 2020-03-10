@@ -24,12 +24,14 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         expe.breaks = [];                  % for each break, trial and duration of the break in sec
         expe.breakNb = 0;                  % current break number
         expe.breakTime = 10;               % time after which there is a small break, in min
-        expe.escapeTimeLimit = 10;         % nb of min after which escape key is deactivated
+        expe.escapeTimeLimit = 5;          % nb of min after which escape key is deactivated
         expe.quickMode = 2;                % 1: ON / 2: OFF / The quick mode allows to skip all the input part at the beginning of the experiment to test faster for what the experiment is.
         expe.inputMode = 1;                % 1: User  ; 2: Robot / The robot mode allows to test the experiment with no user awaitings or long graphical outputs, just to test for obvious bugs
         expe.debugMode = 2;                % 1: ON  ; 2: OFF / In debug mode, some chosen variables are displayed on the screen
-        expe.breakInstructions.fr = strcat('Vous pouvez prendre une pause. Appuyez sur une touche à la fin de la pause.');
-        expe.breakInstructions.en = strcat('You can have a break if you wish. Press a key after the break.');
+        expe.breakInstructions1.fr = strcat('Vous pouvez prendre une pause. Appuyez sur une touche à la fin de la pause.');
+        expe.breakInstructions1.en = strcat('You can have a break if you wish. Press a key after the break.');
+        expe.breakInstructions2.fr = 'PAUSE';
+        expe.breakInstructions2.en = 'BREAK';
         expe.thx.fr = '====  MERCI  =====';
         expe.thx.en = '=====  THANK YOU  =====';
         expe.verbose = 'verboseON';      % verbose or not (verboseON or verboseOFF)
@@ -48,24 +50,19 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %              WINDOW-SCREEN PARAMETERS 
     %====================================================================== 
         scr = screen_parameters;
-        screens=Screen('Screens');
-        scr.screenNumber=max(screens);            % will certainly not function correctly in multiple screen though
+        screens = Screen('Screens');
+        scr.screenNumber = max(screens);            % will certainly not function correctly in multiple screen though
 
-    %check that we have the appropriate resolution
-%        scr.oldResolution=Screen('Resolution',scr.screenNumber);
-%         if scr.oldResolution.width==scr.goalWidthRes && scr.oldResolution.height==scr.goalHeightRes && scr.oldResolution.hz==scr.goalRefreshRate
-%             disp('Resolution and refresh are correct')
-%             scr.pixelSize = scr.oldResolution.pixelSize;
-%         else
+        %check that we have the appropriate resolution
         [success, scr.oldResolution, scr.newResolution]  = changeResolution(scr.screenNumber, scr.goalWidthRes, scr.goalHeightRes, scr.goalRefreshRate);
         if success==0; error('See warning - resolution could not be changed appropriately');end
         scr.pixelSize = scr.newResolution.pixelSize;
         scr.res=Screen('rect', scr.screenNumber); % screen size in pixel, format: [0 0 maxHoriz maxVert]
         
      %check if vertical and horizontal pixel sizes are the same
-        scr.ppBymm= scr.res(3)/scr.W;
+        scr.ppBymm = scr.res(3)/scr.W;
         if abs((scr.res(3)/scr.W)-(scr.res(4)/scr.H))>0.05; warning('Ratio error >5%: change the screen resolution to have equal pixel sizes.');end
-        scr.VA2pxConstant=scr.ppBymm *10*VA2cm(1,scr.distFromScreen); %constant by which we multiply a value in VA to get a value in px ?
+        scr.VA2pxConstant = scr.ppBymm *10*VA2cm(1,scr.distFromScreen); %constant by which we multiply a value in VA to get a value in px ?
         scr.dispByPx = 3600./scr.VA2pxConstant; %disparity (arcsec) by pixel when in one eye
         %careful: if you have 1px of disparity for each eye (not just one), the above disparity by pixel should be multiplied by two
         
@@ -91,23 +88,22 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         scr.RcenterXDot=ceil(scr.centerX+scr.stereoDeviation); %stereo position of right eye center
         scr.centerYDot=ceil(scr.centerY); %stereo position of left eye center
             
-        scr.backgr=15; %in cd/m2
-        scr.keyboardNum=-1; % all available keyboards
+        scr.backgr = 15; %in cd/m2
+        scr.keyboardNum = -1; % all available keyboards
         scr.fontSize  = 30; % font size for text drawings
         
-        scr.w=Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
+        scr.w = Screen('OpenWindow',scr.screenNumber, sc(scr.backgr,scr), [], [], 2, [], scr.pixelSize);      %32 multisamples for anti-aliasing but then system will downgrade to the max supported
         Screen('BlendFunction', scr.w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); %for multisampling anti-aliasing and transparency    
            
-     %    scr.frameTime =Screen('GetFlipInterval', scr.w, 2);
-     %   scr.frameTime = 1/60; %CHANGE HERE
-    %     scr.monitorRefreshRate=1/scr.frameTime;
-        scr.monitorRefreshRate = Screen('NominalFrameRate', scr.w);
-        scr.frameTime = 1/scr.monitorRefreshRate;
+        scr.frameTime = Screen('GetFlipInterval', scr.w);
+        scr.monitorRefreshRate=1/scr.frameTime;
+       % scr.monitorRefreshRate = Screen('NominalFrameRate', scr.w);
+       % scr.frameTime = 1/scr.monitorRefreshRate;
         
         [~, maxSmoothPointSize, ~, ~] = Screen('DrawDots',scr.w);
         scr.maxSmoothPointSize = maxSmoothPointSize;       
         scr.antialliasingMode = 2;  % 2 is best, 3 is OK HERE
-        scr.lenient = 0; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
+        scr.lenient = 1; % enforce (0) or not (1) the abortion of the program in case the detected max dot size is below what we need HERE
         
     %======================================================================
     %              STIMULUS PARAMETERS 
@@ -135,7 +131,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.dotDensity = [12/100, 2/100]; % in % of area occupied by dots for each dot size, so that size in arcsec x nb dots by degree = 2175/2  
          stim.distBetwDots_min = 10; % minimal distance between dots in arcmin - 10 arcmin prevents crowding
          stim.overlap = 0; % can dots overlap each other or not? 0 no, 1 yes (if they can overlap, distBetwDots_min does not matter)
-         stim.maxLoadingTime = 10; %in sec, maximum calculation time allowed to find dot coordinates %HERE
+         stim.maxLoadingTime = 100; %in sec, maximum calculation time allowed to find dot coordinates %HERE
          stim.coherence = 0/100; % share of dots (in %) that have a coherent motion - careful, coherent motion decreases stereoacuity: Hadani & Vardi, 1987
          stim.speedVA_sec = 0.5; % in VA by sec
           %to be converted in arcsec ?
@@ -196,7 +192,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
          stim.flashDuration  = 400;       % duration of a flash in ms (a dyRDS is a series of flash presentations)
          if mod(stim.itemDuration,stim.flashDuration)~=0; warni('Stimulus duration is not a factor of flash duration. For precision, it could be...')
              warni('...wise to adjust stim.itemDuration by ',mod(stim.itemDuration,stim.flashDuration),'ms'); end
-         stim.interTrial   = 0;           % Minimal ISI in ms - entirely determined by calculation time
+         stim.interTrial   = 50;           % Minimal ISI in ms - entirely determined by calculation time
     %--------------------------------------------------------------------------   
 
 % ============================================

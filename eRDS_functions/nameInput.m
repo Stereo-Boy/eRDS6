@@ -2,7 +2,7 @@ function nameId=nameInput(expe)
 %safely ask for a name to save file;
 %if file already exists, dont erases it but prompts for creating another one
 nameId = input('Enter participant''s ID:  ', 's');
-success=check_files(expe.datapath, [nameId,'_menu',expe.menu,'.mat'], 0, 0, 'verboseON');
+success=check_files(expe.datapath, [nameId,'_menu',num2str(expe.menu),'.mat'], 0, 0, 'verboseON');
 
 if success==0
     choice = input('1: add numbers to the ID (new participant) or 2: exit?');
@@ -10,7 +10,7 @@ if success==0
      str=floor(now);
      nameId = [nameId '_' num2str(str)];
      disp(['New ID: ',nameId]);
-     check_files(expe.datapath, nameId, 1, 1, 'verboseON');
+     check_files(expe.datapath, [nameId,'_menu',num2str(expe.menu),'.mat'], 1, 1, 'verboseON');
     elseif choice==2
         error('Voluntary exit')
     else

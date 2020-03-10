@@ -9,7 +9,9 @@ function stereoAcuity(filepath)
 %   4-6     current estimates for thres / slope / neg_slope using sum method
 %   7      final 75% threshold estimate using sum parameters
 %   8       trial # (different from psi.trial)
+dispi('Trying to load: ',filepath)
 load(filepath,'psi1','psi2','expe')
+close all;
 
 pStereoblind1 = plotIt(1,psi1);
 [~, name] = fileparts(filepath);
@@ -95,7 +97,7 @@ function pStereoblind = plotIt(fig,psi)
         scatter(output(:,1),output(:,2),output(:,3).*7,'ok')
         hold off
         set(gca, 'XScale', 'log')
-        xticks([1 10 20 50 100 200 500 1000 2000])
+        xticks([1 10 20 100 200 500 1000 2000])
         xticklabels({'1' '10' '20' '100' '500' '2000'})
 %         %contourf(disparities,psi.thresholds,posterior)
 %         plot(psi.thresholds, posterior)

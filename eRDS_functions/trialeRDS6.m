@@ -19,8 +19,6 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
     % find out what is the next disparity
     psi = Psi_marg_erds6('value',trial, psi, expe, scr);
                                    
-%im2=nan(50,50,3,11); %subpixel
-%for jjj=1:10 %subpixel
    expected_side = round(rand(1)); % 0: left/center side closer - 1: right/outer side closer
    if strcmp(psi.sign, 'near')
         signed_disp = -10.^psi.current_disp;
@@ -53,17 +51,13 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
        blueDots = 2; %always right - useless
    end
    
-       % dispCenter=(jjj-1)/5; %subpixel
-      %dispBg=(jjj-1)/10; %subpixel
       %--------------------------------------------------------------------------
       %=====  Check BREAK TIME  ====================
       %--------------------------------------------------------------------------
        if (GetSecs-expe.lastBreakTime)/60>=expe.breakTime
            Screen('FillRect',scr.w, sc(scr.backgr,scr));
            beginbreak=GetSecs;
-           countdown(30,scr,stim)
-           displaystereotext3(scr,sc(scr.fontColor,scr),stim.instrPosition,expe.breakInstructions.(expe.language),1);
-           flip2(expe.inputMode, scr.w);  
+           countdown(30,scr,stim,expe)
            waitForKey(scr.keyboardNum,expe.inputMode);
            %-------------------- WAIT ------------------------------------------
            expe.breakNb=expe.breakNb+1;
@@ -84,7 +78,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 
              %generates every frames of RDS stimulus
              %backgound
-             expe.nbFrames =  round(stim.itemDuration / stim.flashDuration);   % +20?
+             expe.nbFrames =  ceil(stim.itemDuration / stim.flashDuration);   % +20?
              
              % obtain the number of dots to generate for that area size, dot density, and possible dot sizes (assuming equal number of each possible size)
              if stim.config == 1 % LEFT - RIGHT RDS
@@ -297,24 +291,20 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 
           %--- Background
             Screen('FillRect', scr.w, sc(scr.backgr,scr));
-                  
-                  
+                                   
            % ------ Outside frames    
-            Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth/2);
-            Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth/2);
+            Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth);
+            Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth);
 
            %-----fixation
             drawDichFixation(scr,stim,0,1);
                   
-            [dummy, onsetFixation]=flip2(expe.inputMode, scr.w,[],1);
+            [~, onsetFixation]=flip2(expe.inputMode, scr.w,[],1);
             calculationTime = onsetFixation - startTrialTime;
-        %--------------------------------------------------------------------------
-        %   PRELOADING OF TEXTURES DURING FIXATION 
-        %--------------------------------------------------------------------------
-  
+            
             feuRouge(expe.beginInterTrial+stim.interTrial/1000,expe.inputMode); 
             waitForKey(scr.keyboardNum,expe.inputMode); 
-                   %-------------------- WAIT FOR USER------------------------------------------   
+            interTrialTime = GetSecs - expe.beginInterTrial;
              
 %                     if expe.debugMode==1
 %                          Screen('DrawDots', scr.w, [scr.LcenterXDot,scr.RcenterXDot;scr.LcenterYDot,scr.LcenterYDot], 1,sc(stim.noniusLum,scr));
@@ -322,12 +312,8 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 %                           displayText(scr,sc(scr.fontColor,scr),[0,0,scr.res(3),200],['b:',num2str(block),'/t:',num2str(t),'/c:',num2str(cond),' /ofst: ', num2str(offset),' /ofp ', num2str(offsetPx), '/upRO:', num2str(upRightOffset),'/jit:',num2str(jitter),'/upF:',num2str(upFactor)]);
 %                     end    
 
-        stimulationFlag=1;
-        onsetStim=GetSecs;
-        fixationDuration = onsetStim - onsetFixation;
-        frameOnset=onsetStim;  
-             
-        % Shuffling white and black dots
+                    
+        % Shuffling white, blue and black dots
         if stim.config == 1 % LEFT - RIGHT RDS
             dots1 = Shuffle(1:stim.totalNbDotsLeft);
             dots2 = Shuffle(1:stim.totalNbDotsRight);
@@ -339,11 +325,18 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
              %Missed = 0;  
              timetable=nan(expe.nbFrames,1);
              frameList = [];
+             frame = 0;
+             stimulationFlag=1;
         while stimulationFlag
                 %--------------------------------------------------------------------------
                 %   STIMULATION LOOP
                 %--------------------------------------------------------------------------
-                  if stim.flash == 0
+                if frame == 0 %initialization
+                    onsetStim=GetSecs;
+                    fixationDuration = onsetStim - onsetFixation;
+                    frameOnset=onsetStim;  
+                end
+                  if stim.flash == 0 %NOT IMPLEMENTED
                       frame = 1+floor((frameOnset-onsetStim)/(scr.frameTime)); %take the frame nearest to the supposed timing to avoid lags
                   else
                       frame = 1+floor((frameOnset-onsetStim)/(stim.flashDuration/1000)); %take the frame nearest to the supposed timing to avoid lags                     
@@ -431,9 +424,9 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
         
             end
                           
-                   % feuRouge(frameOnset+stim.frameTime-max(0,Missed),expe.inputMode); 
-                   frameOff =frameOnset;
-                 [dummy, frameOnset]=flip2(expe.inputMode, scr.w,frameOff+scr.frameTime,1); %-max(0,Missed)
+               % feuRouge(frameOnset+stim.frameTime-max(0,Missed),expe.inputMode); 
+                 frameOff = frameOnset;
+                 [~, frameOnset]=flip2(expe.inputMode, scr.w,frameOff+scr.frameTime,1); %-max(0,Missed)
                  timetable(frame)=frameOnset-frameOff;
 
                  
@@ -469,22 +462,15 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 
             
            %--------------------------------------------------------------------------
-           %   DISPLAY MODE STUFF
+           %   DISPLAY MODE 
            %--------------------------------------------------------------------------
            if expe.debugMode==1
             texts2Disp=sprintf('%+5.3f %+5.3f %+5.3f %+5.0f %+5.1f %+5.2f %+5.1f %+5.2f %+5.3f', [dispCenter, dispBg, targCloser, disparitySec]);
-
                Screen('DrawDots', scr.w, [scr.LcenterXLine;scr.LcenterYLine], 1, 100,[],2); 
-            
-%                for iii=-200:10:200
-%                     Screen('DrawLine', scr.w, sc(stim.LminL,scr), scr.LcenterXLine+iii, scr.LcenterYLine+1000 ,  scr.LcenterXLine+iii, scr.LcenterYLine-1000 , 1);   %Left eye up line
-%                     Screen('DrawLine', scr.w, sc(stim.LminL,scr), scr.RcenterXLine+iii, scr.RcenterYLine+1000 ,  scr.RcenterXLine+iii, scr.RcenterYLine-1000 , 1);   %Left eye up line
-%                end
                displayText(scr,sc(stim.LminL,scr),[scr.LcenterXLine-75,scr.LcenterYLine+100-2.*scr.fontSize,scr.res(3),200],texts2Disp);
                displayText(scr,sc(stim.LminR,scr),[scr.RcenterXLine-75,scr.RcenterYLine+100-2.*scr.fontSize,scr.res(3),200],texts2Disp);
                flip2(expe.inputMode, scr.w, [], 1);
-               waitForKey(scr.keyboardNum,expe.inputMode);
-               
+               waitForKey(scr.keyboardNum,expe.inputMode);              
            end
              
             if (GetSecs-onsetStim)>= stim.itemDuration/1000 
@@ -503,12 +489,9 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
         end
         
 %         % ---- TIMING CHECKS ---%
-%                 nanmean(timetable)
-%                     nanstd(timetable)
-%                     sca
-%                     xx
-        
-          % clear stimulus space   
+         dispi('Average frame duration (ms): ',   nanmean(timetable).*1000)
+
+        % clear stimulus space   
         %--- Background
             Screen('FillRect', scr.w, sc(scr.backgr,scr));
 %         %all of it including center space
@@ -524,17 +507,16 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 %         end
 
         % ------ Outside frames    
-            Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth/2);
-            Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth/2);
-            
-             
+            Screen('FrameRect', scr.w, sc(stim.fixL,scr),stim.frameL, stim.frameLineWidth);
+            Screen('FrameRect', scr.w, sc(stim.fixR,scr),stim.frameR, stim.frameLineWidth);
+                        
         %----- fixation
            drawDichFixation(scr,stim);
            
-        [dummy, offsetStim]=flip2(expe.inputMode, scr.w,[],1);
-        
+           [~, offsetStim]=flip2(expe.inputMode, scr.w,[],1);
+           expe.stimTime= offsetStim-onsetStim;
+           
          % ---------------------  RESPONSE --------------------------    
-        expe.stimTime= offsetStim-onsetStim;
           if responseKey == 0 
             %--------------------------------------------------------------------------
             %   GET RESPONSE if no response at that stage
@@ -573,21 +555,20 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                 keyboard
            end
 
-           
             % --- FEEDBACK  ---%
-            if stim.config == 1 % left -right
+            % decide what is correct or not
+            if stim.config == 1 % left-right
                 % task: which side is closer to you (1: left, 2: right)?
-                 expected_key = expected_side + 1; 
+                 expected_key = expected_side + 1;  % expected_side = 0 if centre closer, 1 if outer closer
             elseif stim.config == 3 % center - outer 
-                % task: are the blue dot surface closer to you than the
-                % other one or further (5: further, 6: closer)?
-                % expected_side = 0 if centre closer, 1 if outer closer
+                % task: are the blue dot surface closer to you than the other one or further (5: further, 6: closer)?
                 if blueDots==0 %center is blue
-                    expected_key = 6 - expected_side; 
+                    expected_key = 6 - expected_side; % expected_side = 0 if centre closer, 1 if outer closer
                 else            % outer is blue
                     expected_key = 5 + expected_side; 
                 end
             end
+            % decide whether feedback needed or not, and what kind
              if expe.feedback>0
                 if expected_key==responseKey %CORRECT
                    PsychPortAudio('Start', sounds.handle1, 1, 0, 1);
@@ -596,10 +577,10 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                     %INCORRECT
                     psi.correct = 0;
                     if expe.feedback == 1 || (expe.feedback == 2 && psi.practice_trial==1) %meaningful auditory feedback
-                    %if expe.feedback == 1 || expe.feedback == 2 %HERE remove that line and take line above
-                        PsychPortAudio('Start', sounds.handle2, 1, 0, 1);
+                    %if expe.feedback == 1 || expe.feedback == 2 %remove that line and take line above
+                        PsychPortAudio('Start', sounds.handle2, 1, 0, 0, 0.5); 
                     else    %keypress auditory feedback
-                        PsychPortAudio('Start', sounds.handle1, 1, 0, 1);
+                        PsychPortAudio('Start', sounds.handle1, 1, 0, 0, 0.5);
                     end
                 end
              end
@@ -616,9 +597,8 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
         %--------------------------------------------------------------------------
         %            INTER TRIAL
         %--------------------------------------------------------------------------
-           %inter-trial is actually at the beginning of next trial to allow pre-loading of textures in the meantime.
-           %to be able to do that, we have to start counting time
-           %from now on:
+           %inter-trial actually ends at the beginning of next trial to allow pre-loading of textures in the meantime.
+           %to be able to do that, we have to start counting time from now on:
            expe.beginInterTrial=GetSecs;
            
             if expe.debugMode==1
@@ -626,8 +606,6 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                 displayText(scr,sc(scr.fontColor,scr),[0,100,scr.res(3),200],['responseKey:',num2str(responseKey),'/RT:',num2str(RT)]);
                 flip2(expe.inputMode, scr.w,[],1);
                 waitForKey(scr.keyboardNum,expe.inputMode);
-                %Screen('FillRect', scr.w, sc(scr.backgr,scr));
-                %flip2(expe.inputMode, scr.w,[],1);
             end
 
         %------ Progression bar for robotMode ----%
@@ -638,17 +616,25 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
      % removed doublon from framelist and count
       frameList = logic('union', frameList,[]);
       nbFrameShown = numel(frameList);
-     
+      dispi('Average stimulus duration (ms): ',1000*expe.stimTime/nbFrameShown)
+      
      % update and record psi data
       psi = Psi_marg_erds6('record',trial, psi, expe, scr);
 
         % -----------   SAVING DATA ------------------%
            if stopSignal==1
                trialLine = nan(1,11);
-               timings = nan(1,6);
+               timings = nan(1,7);
            else
-               trialLine = [trial,L_R_disp(1),L_R_disp(2),expected_key,responseKey, fixationDuration, RT, psi.correct, L_R_disp_pp(1), L_R_disp_pp(2),psi.practice_trial];
-               timings = [calculationTime, fixationDuration, nanmean(timetable),expe.stimTime/nbFrameShown,expe.stimTime, RT];
+               trialLine = [trial,L_R_disp(1),L_R_disp(2),expected_key,responseKey, 1000.*expe.stimTime, 1000.*RT, psi.correct, L_R_disp_pp(1), L_R_disp_pp(2),psi.practice_trial];
+               timings = 1000.*[calculationTime, fixationDuration, nanmean(timetable),expe.stimTime/nbFrameShown,expe.stimTime, RT, interTrialTime];
+                % time necessary to calculate RDS coordinates in ms
+                % additionnal fixation time before stimulus onset in ms
+                % estimate of frame duration in ms
+                % estimate of flash duration in ms
+                % stimulus duration in ms
+                % reaction time in ms
+                % ISI in ms
            end
                                        
           expe.results(trial,:)= trialLine;
@@ -660,18 +646,15 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                                    %    3:  disparity value in arcsec of right/outer side
                                    %    4:  which side is closer (expected answer) - 1: left/center - 2:right/outer
                                    %    5:  responseKey - left/center side is closer(1) or right/outer (2)
-                                   %    6:  stimulus duration
-                                   %    7:  RT = response duration after stimulus     
+                                   %    6:  stimulus duration in ms
+                                   %    7:  RT = response duration after stimulus in ms     
                                    %    8:  Correct answer or not
                                    %    9:  disparity value in pp of left/center side
                                    %   10:  disparity value in pp of right/outer side
                                    %   11:  practice trial (1) or not (0)
                                    %   12:  blue dots: 0 centre, 1: outer strips, 2: always right
                                    
-    
-%end %subpixel
-% for j=1:11; plot(mean(im2(25,14:20,:,j),3)); hold on; end %subpixel
-
+ 
 % catch err   %===== DEBUGING =====%
 %     sca
 %     ShowHideWinTaskbarMex
