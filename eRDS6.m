@@ -162,7 +162,7 @@ try
     end 
     expe.nn = expe.nbTrials+expe.practiceTrials; % number of trials in total (for either the near or the far disparities)
         % the actual total number of trials is two times expe.nn because we adds near and far trials.
-    expe.results = nan(size(2*expe.nn,1),11);
+    expe.results = nan(size(2*expe.nn,1),13);
     expe.timings = nan(size(2*expe.nn,1),7);
     
     %--------------------------------------------------------------------------
