@@ -234,8 +234,8 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         [wave2, sounds.freq2] = psychwavread(fullfile(expe.soundpath,'fail.wav'));
         sounds.fail = wave2';
         InitializePsychSound;
-        sounds.handle1 = PsychPortAudio('Open', [], [], 0, sounds.freq1, 2);
-        sounds.handle2 = PsychPortAudio('Open', [], [], 0, sounds.freq2, 2);
+        sounds.handle1 = PsychPortAudio('Open', [], [], 0, sounds.freq1, size(sounds.success,1));
+        sounds.handle2 = PsychPortAudio('Open', [], [], 0, sounds.freq2, size(sounds.fail,1));
         PsychPortAudio('FillBuffer', sounds.handle1, sounds.success);
         PsychPortAudio('FillBuffer', sounds.handle2, sounds.fail);
         
