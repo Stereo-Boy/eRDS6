@@ -397,7 +397,6 @@ try
             Screen('FillRect',scr.w, sc(scr.backgr,scr));
             displaystereotext3(scr,sc(scr.fontColor,scr),[0,500,500,400],expe.thx.(expe.language),1);
             flip2(expe.inputMode, scr.w);
-            waitForKey(scr.keyboardNum,expe.inputMode);
             
             %===== SAVE ===%
             expe.duration = (GetSecs-expe.startTime)/60;
@@ -420,12 +419,13 @@ try
             end
 
         %===== QUIT =====%
+            waitForKey(scr.keyboardNum,expe.inputMode);
             precautions(scr.w, 'off');
             changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz);    
            
             disp('==========================================')
             disp('         Results')
-            dispi('Duration:',round((GetSecs-expe.startTime)/60,1));
+            dispi('Duration:',round(expe.duration,1));
             if isfield(psi1, 'threshold')
                 stereoAcuity(fullfile(expe.datapath,[expe.name,'_menu',num2str(expe.menu),'.mat']))
             else
