@@ -626,10 +626,10 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 
         % -----------   SAVING DATA ------------------%
            if stopSignal==1
-               trialLine = nan(1,11);
+               trialLine = nan(1,13);
                timings = nan(1,7);
            else
-               trialLine = [trial,L_R_disp(1),L_R_disp(2),expected_key,responseKey, 1000.*expe.stimTime, 1000.*RT, psi.correct, L_R_disp_pp(1), L_R_disp_pp(2),psi.practice_trial];
+               trialLine = [trial,L_R_disp(1),L_R_disp(2),expected_key,responseKey, 1000.*expe.stimTime, 1000.*RT, psi.correct, L_R_disp_pp(1), L_R_disp_pp(2),psi.practice_trial, blueDots, psi.sign];
                timings = 1000.*[calculationTime, fixationDuration, nanmean(timetable),expe.stimTime/nbFrameShown,expe.stimTime, RT, interTrialTime];
                 % time necessary to calculate RDS coordinates in ms
                 % additionnal fixation time before stimulus onset in ms
@@ -656,6 +656,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                                    %   10:  disparity value in pp of right/outer side
                                    %   11:  practice trial (1) or not (0)
                                    %   12:  blue dots: 0 centre, 1: outer strips, 2: always right
+                                   %   13:  staircase type (near or far)
                                    
  
 % catch err   %===== DEBUGING =====%
