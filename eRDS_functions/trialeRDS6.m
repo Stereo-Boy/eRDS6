@@ -343,7 +343,10 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                   end
                   frameList=[frameList,frame]; %use this to count the nb of different frames shown
                   
-               %delete the RDS space         
+               %delete the RDS space    
+               %--- Background
+                    Screen('FillRect', scr.w, sc(scr.backgr,scr));
+            
 %                     %all of it including center space
 %                     if stim.config == 1 % LEFT - RIGHT RDS
 %                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.leftrdsL(1) stim.leftrdsL(2)-1 stim.rightrdsL(3) stim.rightrdsL(4)+1]); 
@@ -352,8 +355,8 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
 %                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsL(1) stim.outerrdsL(2)-1 stim.outerrdsL(3) stim.outerrdsL(4)+1]); 
 %                        Screen('FillRect', scr.w ,sc(scr.backgr,scr) , [stim.outerrdsR(1) stim.outerrdsR(2)-1 stim.outerrdsR(3) stim.outerrdsR(4)+1]);
 %                     else
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameL); 
-                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameR);
+%                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameL); 
+%                       Screen('FillRect', scr.w ,sc(scr.backgr,scr) , stim.frameR);
 %                    end
                     
                     if expe.debugMode==1
@@ -578,9 +581,9 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
                     psi.correct = 0;
                     if expe.feedback == 1 || (expe.feedback == 2 && psi.practice_trial==1) %meaningful auditory feedback
                     %if expe.feedback == 1 || expe.feedback == 2 %remove that line and take line above
-                        PsychPortAudio('Start', sounds.handle2, 1, 0, 0, 0.5); 
+                        PsychPortAudio('Start', sounds.handle2, 1, 0, 0); 
                     else    %keypress auditory feedback
-                        PsychPortAudio('Start', sounds.handle1, 1, 0, 0, 0.5);
+                        PsychPortAudio('Start', sounds.handle1, 1, 0, 0);
                     end
                 end
              end
