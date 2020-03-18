@@ -255,7 +255,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         psi.t1 = 1000;
         psi.t2 = 1600;
         psi.tmax = 2200; % maximal threshold that we parametrized  
-        psi.tstep1 = 0.04; %step size for this parameter in log unit 0.05
+        psi.tstep1 = 0.05; %step size for this parameter in log unit 0.05
         psi.tstep2 = 0.04;
         psi.thresholds = [log10(0.5:0.5:2.5),log10(psi.tmin):psi.tstep1:log10(psi.t1),log10(psi.t1):psi.tstep2:log10(psi.t2),...
             log10(psi.t2):psi.tstep1:log10(psi.tmax),log10(100000)]; %range of possible values for thresholds T, in log10(arcsec)
