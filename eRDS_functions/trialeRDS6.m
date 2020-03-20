@@ -15,7 +15,10 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
     startTrialTime = GetSecs;
     stopSignal = 0;
     stim.trial = trial;
-    
+    if trial == 1 % start timers
+        expe.startTime=GetSecs;
+        expe.lastBreakTime=GetSecs; %time from the last break
+    end
     % find out what is the next disparity
     psi = Psi_marg_erds6('value',trial, psi, expe, scr);
                                    

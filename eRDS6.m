@@ -185,8 +185,6 @@ try
          scr.RcenterYLine = scr.centerYLine - expe.rightUpShift;
          scr.LcenterYDot = scr.centerYDot - expe.leftUpShift;
          scr.RcenterYDot = scr.centerYDot - expe.rightUpShift;
-         expe.startTime=GetSecs;
-         expe.lastBreakTime=GetSecs; %time from the last break
          expe.date ={dateTime};
          expe.goalCounter=2.*expe.nn;    % for robot mode  
 
