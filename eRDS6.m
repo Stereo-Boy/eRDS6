@@ -1,46 +1,39 @@
 function eRDS6
 %------------------------------------------------------------------------
-% eRDS (version 6) is a program to precisely measure stereoscopic vision performance
-% using recommendations from Chopin et al., 2019, OPO & Scientific Reports
-% Indeed, it uses a dynamic RDS to prevent monocular cues and a depth
-% ordering task rather than an oddball to avoid binocular non-stereo cues.
-% It is a depth detection task, and it issues a threshold separately for
-% crossed (close) and uncrossed (far) disparities.
-% Short presentations (200ms) allows to separate for these two measures
-% (otherwise eye movements can inverse the sign of disparities).
-% Long presentations (2 sec) allows for a better threshold using vergence
-% and eye movements. 
-% Stimulus are two identical rectangular surface-RDS with a frame around
-% and a fixation cross in the center. Dots are white and black or blue and black.
-% In one configuration, either the left or the right surface is in front of the other and the task 
-% is to indicate which one (2AFC).
-% In another configuration, either the central or the outer stripes are in front of the others and the task 
-% is to indicate whether the blue dots one is closer or further (2AFC).
-% Instead of a constant stimuli paradigm, we use an adaptation of Psi (Kontsevich & Tyler, 1999)
-% bayesian algorithm to non-monotonic psychometric functions. Indeed, we
-% also use marginalization of nuisance parameters following Prins (2013)
-% Prior is estimated from 25 practice trials, and 10 additionnal practice
-% trials are run (and discarded) simply to learn the task.
-% The program involves to first run the DST test to calibrate the
-% stereoscope appropriately and ensure fusion.
+% eRDS (version 6) is a program to precisely measure stereoscopic vision performance using recommendations from 
+% Chopin et al., 2019, OPO & Scientific Reports. Indeed, it uses a dynamic RDS to prevent monocular cues and a
+% depth ordering task rather than an oddball to avoid binocular non-stereo cues. It is a depth detection task, 
+% and it issues a threshold separately for crossed (close) and uncrossed (far) disparities.
+% Short presentations (200ms) allows to separate for these two measures (otherwise eye movements can inverse the 
+% sign of disparities). Long presentations (2 sec) allows for a better threshold using vergence and eye movements. 
+% Stimulus are three identical rectangular surface-RDS (stripes) with a frame around and a fixation cross in the 
+% center. Dots are white and black or blue and black.
+% Either the central or the outer stripes are in front of the others and the task is to indicate whether the blue 
+% dots surface is closer or further (2AFC).
+% Instead of a constant stimuli paradigm, we use an adaptation of Psi (Kontsevich & Tyler, 1999) bayesian algorithm
+% adapted to non-monotonic psychometric functions. Indeed, we also use marginalization of nuisance parameters following
+% Prins (2013) and implement the adaptive searchgrid rescaling from Doire et al. (2017) for threshold parameter.
+% Prior is uniform but estimated from 12 practice trials, and we recommend to first run 10 additionnal practice trials 
+% (that will be discarded).
+% The program involves to first run the DST test to calibrate the stereoscope appropriately and ensure fusion.
 %
 % Changes in version 6
-%   - now a left-right task to prevent strategies / or central-outer stips
+%   - now a central-outer stipes task on the blue dots to avoid strategies
 %   - no eye tracking mode anymore
-%   - super-imposition of dots is not allowed anymore following Read &
-%   Cumming (2018) and 10 arcmin of minimal distance is enforced to avoid
-%   stereo crowding
-%   - drawDots is used with anti-aliasing
-%   - does not support pedestals anymore
+%   - super-imposition of dots is not allowed anymore following Read & Cumming (2018) 
+% and 10 arcmin of minimal distance is enforced to avoid stereo crowding
+%   - drawDots is used for the anti-aliasing
+%   - does not support pedestals 
 %   - use of Psi for non-monotonic functions rather than constant stimuli
+%   with adaptive grid and marginalization of nuisance parameters
 %   - larger possible disparities
 %   - use of sharp dots rather than Gaussian, different sizes
 %   - cannot load a previously started or crashed session anymore
 %   - load a screen calibration file with screen parameters located in screen folder
 %
 % Properties:
-%   - only 24 practice trials, always embedded in the test
-%   - 10 additionnal practice trials possible, to run first
+%   - only 24 practice trials (12 crossed, 12 uncrossed), embedded in the test
+%   - 10 additionnal practice trials recommended to run first
 %   - menu options with 200ms or 2000 ms test without eyetracking
 %
 % Stimulus sequence: 
@@ -49,17 +42,13 @@ function eRDS6
 %   -response
 %   -ISI
 %
-%   - most parameters are controled in the globalParameters file except for
-%   the ones in the default section below
-%   
+%   - most parameters are controled in the parametersERDS6 file
+%   - screen parameters in the screen folder
 %------------------------------------------------------------------------
 % Controls: 
-%       Left arrow (closer surface is on the left)
-%       Right arrow  (close surface is on the right)
+%       up arrow (blue dots surface is further away)
+%       down arrow  (blue dots surface is closer)
 %       Backspace key (exit)
-%------------------------------------------------------------------------
-% Analysis: the correct file to analyse individual results is:
-%
 %=======================================================================
 
 try
@@ -84,6 +73,7 @@ try
     check_folder(expe.screenpath,1,'verboseON');
     check_folder(expe.soundpath,1,'verboseON');
     addpath(expe.screenpath); % so that we can load the screen parameters from there
+    addpath(fullfile(expe.eRDSpath,'analysis'));
     expe.dateTime = dateTime;
     disp(dateTime)
     
@@ -379,7 +369,7 @@ try
            [expe, psi1, stopSignal]=trialeRDS6(1,stim,scr,expe,sounds,psi1);    
        else %ACTUAL TEST
            sign_list = Shuffle([ones(1,expe.nn),zeros(1,expe.nn)]);
-           for trial=1:(2*expe.nn)
+           for trial=1:(2*expe.nn) % 2x because we have far and close disparities, each being nn trials 
                    if sign_list(trial) == 0
                         [expe, psi1, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi1);
                    else

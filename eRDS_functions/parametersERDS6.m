@@ -242,51 +242,45 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     %--------------------------------------------------------------------------
     %   PSI algorithm parameters
     %----------------------------------------------------------------------------
-        psi.xmin= 3; %minimal disparity possible in arcsec (cannot measure thresholds below that value!) % adding 0.5, 1, 1.5, 2 and 2.5 though
-        psi.x1 = 1200;
-        psi.x2 = 1400;
+        psi.xmin= 1; %minimal disparity possible in arcsec (cannot measure thresholds below that value!) % adding 0.5, 1, 1.5, 2 and 2.5 though
+        psi.xmin2 = 0.1; %after rescaling
         psi.xmax = 3000; %max one (cannot measure thresholds above that value!)
-        psi.xstep1 = 0.001; %step size for sampling in log unit 0.05
-        psi.xstep2 = 0.0005;
-        psi.disparities = [log10(0.5:0.5:2.5),log10(psi.xmin):psi.xstep1:log10(psi.x1),log10(psi.x1):psi.xstep2:log10(psi.x2),...
-            log10(psi.x2):psi.xstep1:log10(psi.xmax)]; %range of possible values for disparities x, in log10(arcsec)
+        psi.gridSizeX = 50;
+        psi.disparities = unique([log10([1,10,100,1000,2000,3000]),linspace(log10(psi.xmin),log10(psi.xmax),psi.gridSizeX)]); %starting search grid of possible values for disparities x, in log10(arcsec)
         
-        psi.tmin = 3; % minimal threshold that we parametrized % adding 0.5, 1, 1.5, 2 and 2.5 though
-        psi.t1 = 1000;
-        psi.t2 = 1600;
-        psi.tmax = 2200; % maximal threshold that we parametrized  
-        psi.tstep1 = 0.05; %step size for this parameter in log unit 0.05
-        psi.tstep2 = 0.04;
-        psi.thresholds = [log10(0.5:0.5:2.5),log10(psi.tmin):psi.tstep1:log10(psi.t1),log10(psi.t1):psi.tstep2:log10(psi.t2),...
-            log10(psi.t2):psi.tstep1:log10(psi.tmax),log10(100000)]; %range of possible values for thresholds T, in log10(arcsec)
+        psi.tmin = 1; % minimal threshold that we parametrized before rescaling
+        psi.tmin2 = 0.1; %and after rescaling
+        psi.tmax1 = 2200; % maximal threshold that we parametrized before rescaling
+        psi.tmax2 = 3000; % maximal threshold that we parametrized after rescaling
+        psi.gridSizeT = 100;
+        psi.thresholds = unique([log10([1,10,100,1000,2000,100000]),linspace(log10(psi.tmin),log10(psi.tmax1),psi.gridSizeT)]); %range of possible values for thresholds T, in log10(arcsec)
         
-        psi.slopes = [0.2,0.4,0.8,1.6,3.2]; %range of possible values for slope s
-
+        psi.slopes = [0.2,0.3,0.4,0.6,0.8,1.2,1.6,2.4]; %range of possible values for slope s
         psi.neg_slopes = [0,0.003,0.006,0.012,0.024,0.056,0.112];
-        
+
         psi.lapse = 0.035/2; % we assumed a fixed lapse (finger error) rate (in %)
         psi.maxAllowerThreshold=1300; % threshold considered stereoblindness
         psi.g = 0.5; %guess rate (we have one chance out of 2 - 2AFC)
         psi.delta = 0.01; %what part of the psychometric function is considered ([delta, 1-delta]
         psi.p = 0.75; %success rate at threshold
         psi.practice = log10([ %if we have practice trials, their disparities will be these ones, in that order
+            2500      
+            2000    
+            1500   
             1300      
-            1300
-            1300
-            1000    
-            1000   
-            1000
-            500    
-            500    
-            250     
-            250       
-            100    
-            100    
+            1000     
+            800     
+            500     
+            300      
+            200       
+            100          
+            50       
+            20   
             ]);
         psi.sim_threshold = 1000; %simulated threshold whenever we do robotMode
         psi.end = 0;  % end signal for algorithm
         psi.trial = 1;
-        
+        psi.donothing_counter = 0;
         precautions(scr.w, 'on');
  
 %     SPECIAL for VIEWPIXX - this needs the usb cable to be plugged

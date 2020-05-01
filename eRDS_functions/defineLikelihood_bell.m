@@ -15,6 +15,6 @@ function likelihood = defineLikelihood_bell(g, neg_slope, pos_slope, delta, p, d
 % thresholds is the threshold in log arcsec
 
 %likelihood = max(min(1,1-neg_slope/100.*(10.^disparities-2.*(10.^thresholds))).*defineLikelihood(g, lapse, pos_slope, delta, p, disparities, thresholds),0.5);
-likelihood = max(min(1,1-neg_slope/100.*(10.^disparities-((10.^thresholds)+1.5*pos_slope.*(10.^thresholds)))).*defineLikelihood(g, lapse, pos_slope, delta, p, disparities, thresholds),0.5);
-
+likelihood = max(min(1,1-(neg_slope./100).*(10.^disparities-((10.^thresholds)+1.5.*pos_slope.*(10.^thresholds))))...
+    .*defineLikelihood(g, lapse, pos_slope, delta, p, disparities, thresholds),0.5);
 end

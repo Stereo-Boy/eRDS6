@@ -9,14 +9,9 @@ function stereoAcuity(filepath)
 %   4-6     current estimates for thres / slope / neg_slope using sum method
 %   7      final 75% threshold estimate using sum parameters
 %   8       trial # (different from psi.trial)
-dispi('Trying to load: ',filepath)
-load(filepath,'psi1','psi2','expe')
-close all;
+load(filepath,'psi1','psi2')
 
 pStereoblind1 = plotIt(1,psi1);
-[~, name] = fileparts(filepath);
-dispi('Data: ',name)
-dispi('Duration: ',round(expe.duration,1),' min')
 disp('-------------------------------------------------------')
 dispi('    ',psi1.sign,' disparities')
 disp('-------------------------------------------------------')
@@ -59,9 +54,9 @@ function pStereoblind = plotIt(fig,psi)
          xlabel('Thresholds (")')
          title('Posterior for threshold')
          ylabel('Marginalized probability')
-         set(gca, 'XScale', 'log')
-         xticks([1 10 100 500 2000])
-         xticklabels({'1' '10' '100' '500' '2000'})
+         set(gca, 'YScale', 'log')
+         yticks([1 10 50 100 500 2000])
+         yticklabels({'1' '10' '50' '100' '500' '2000'})
        
         subplot(2,3,2) % positive slope estimate distribution
         hold off
@@ -97,7 +92,7 @@ function pStereoblind = plotIt(fig,psi)
         scatter(output(:,1),output(:,2),output(:,3).*7,'ok')
         hold off
         set(gca, 'XScale', 'log')
-        xticks([1 10 20 100 200 500 1000 2000])
+        xticks([1 10 20 50 100 200 500 1000 2000])
         xticklabels({'1' '10' '20' '100' '500' '2000'})
 %         %contourf(disparities,psi.thresholds,posterior)
 %         plot(psi.thresholds, posterior)
@@ -117,8 +112,8 @@ function pStereoblind = plotIt(fig,psi)
        text(20, 1000, sprintf('Trials: %d',psi.trial))
        text(20, 700, sprintf('Estimate: %d" (%d")',round(psi.thr_sum),round(psi.threshold)))
        set(gca, 'YScale', 'log')
-       yticks([1 5 10 50 100 200 500 1000 2000])
-       yticklabels({'1' '5' '10' '50' '100' '200' '1000' '500' '2000'})
+       yticks([1 10 50 100 500 2000])
+       yticklabels({'1' '10' '50' '100' '500' '2000'})
         
        subplot(2,3,6); % history of slope estimate
        hold on;

@@ -1,0 +1,379 @@
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\DST8\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\screen
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\sound
+Date and Time:	24/ 4/2020	21: 6:46
+------------------------------------
+Experimental Menu (choose an option)
+====================================
+1: Quick Mode
+2: Manual Mode (not implemented yet)
+3: Practice 2000 ms - 2 x 5 trials
+4: Test 2000 ms - 2 x 12 practice + 73 trials
+5: Test 200 ms - 2 x 12 practice + 73 trials
+6: Debug mode (not implemented yet)
+7: Robot mode
+8: Checking mode
+9: Exit
+====================================
+Your option? 7
+changeResolution: We will do nothing because the current resolution is already at 1366x768
+and the current refresh rate is already 60hz
+[Warning: Ratio error >5%: change the screen resolution to have equal pixel sizes.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parametersERDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m', 64)" style="font-weight:bold">parametersERDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',64,0)">line 64</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eRDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6.m', 111)" style="font-weight:bold">eRDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6.m',111,0)">line 111</a>)] 
+
+
+PTB-INFO: This is Psychtoolbox-3 for Microsoft Windows, under Matlab 64-Bit (Version 3.0.16 - Build date: Aug  7 2019).
+PTB-INFO: OS support status: Windows 10 (Version 10.0) supported and tested to some limited degree.
+PTB-INFO: Type 'PsychtoolboxVersion' for more detailed version information.
+PTB-INFO: Most parts of the Psychtoolbox distribution are licensed to you under terms of the MIT License, with
+PTB-INFO: some restrictions. See file 'License.txt' in the Psychtoolbox root folder for the exact licensing conditions.
+
+PTB-INFO: The detected endline of the vertical blank interval is equal or lower than the startline. This indicates
+PTB-INFO: that i couldn't detect the duration of the vertical blank interval and won't be able to correct timestamps
+PTB-INFO: for it. This will introduce a very small and constant offset (typically << 1 msec). Read 'help BeampositionQueries'
+PTB-INFO: for how to correct this, should you really require that last few microseconds of precision.
+PTB-INFO: Btw. this can also mean that your systems beamposition queries are slightly broken. It may help timing precision to
+PTB-INFO: enable the beamposition workaround, as explained in 'help ConserveVRAMSettings', section 'kPsychUseBeampositionQueryWorkaround'.
+
+
+PTB-INFO: OpenGL-Renderer is Intel :: Intel(R) UHD Graphics 620 :: 4.6.0 - Build 26.20.100.7262
+PTB-INFO: VBL startline = 768 , VBL Endline = 768
+PTB-INFO: Measured monitor refresh interval from beamposition = 16.665394 ms [60.004582 Hz].
+PTB-INFO: Beamposition queries are supported, but disabled. Using basic timestamping as fallback:
+PTB-INFO: Timestamps returned by Screen('Flip') will be therefore less robust and accurate.
+PTB-INFO: Measured monitor refresh interval from VBLsync = 16.668962 ms [59.991738 Hz]. (50 valid samples taken, stddev=0.097212 ms.)
+PTB-INFO: Reported monitor refresh interval from operating system = 16.666667 ms [60.000000 Hz].
+PTB-INFO: Small deviations between reported values are normal and no reason to worry.
+PTB-WARNING: Could not enable Anti-Aliasing as requested. Your hardware does not support this feature!
+PTB-INFO: ==============================================================================================================================
+PTB-INFO: WINDOWS DWM DESKTOP COMPOSITOR IS ACTIVE. On this Windows-10 or later system, Psychtoolbox can no longer reliably detect if
+PTB-INFO: this will cause trouble for timing and integrity of visual stimuli or not. You might be just fine, or you could be in trouble.
+PTB-INFO: Use external measurement equipment and independent procedures to verify reliability of timing if you care about proper timing.
+PTB-INFO: ==============================================================================================================================
+Correcting: stim.frameWidth should be even - adding 1pp
+Correcting: stim.frameHeight should be even - adding 1pp
+PTB-INFO: New audio device -1 with handle 10 opened as PortAudio stream:
+PTB-INFO: For 1 channels Playback: Audio subsystem is MME, Audio device name is Speakers/Headphones (Realtek(R)
+PTB-INFO: Real samplerate 44100.000000 Hz. Input latency 0.000000 msecs, Output latency 180.317460 msecs.
+PTB-INFO: New audio device -1 with handle 11 opened as PortAudio stream:
+PTB-INFO: For 2 channels Playback: Audio subsystem is MME, Audio device name is Speakers/Headphones (Realtek(R)
+PTB-INFO: Real samplerate 44100.000000 Hz. Input latency 0.000000 msecs, Output latency 180.317460 msecs.
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+Loading DST file default
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Warning, centerSizedAreaOnPx issues some rect values inferior to 1. We correct them to 1 but you should check that.
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Warning, centerSizedAreaOnPx issues some rect values inferior to 1. We correct them to 1 but you should check that.
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Warning, centerSizedAreaOnPx issues some rect values inferior to 1. We correct them to 1 but you should check that.
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Warning, centerSizedAreaOnPx issues some rect values inferior to 1. We correct them to 1 but you should check that.
+Careful! centerSizedAreaOnPx received an even sized area width and resulting rect will be 1px bigger...
+Careful! centerSizedAreaOnPx received an even sized area height and resulting rect will be 1px bigger...
+Expe structure: 
+              eRDSpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6'
+               funpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions'
+              rootpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure'
+               DSTpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\DST8\dataFiles'
+               logpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\log'
+              datapath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\dataFiles'
+            screenpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\screen'
+             soundpath: 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\sound'
+              dateTime: 'Date and Time:	24/ 4/2020	21: 6:46'
+                  menu: 7
+              feedback: 0
+              nbTrials: 73
+        practiceTrials: 12
+               version: 'eRDS6'
+                  time: []
+                  date: {'Date and Time:	24/ 4/2020	21: 6:49'}
+                breaks: []
+               breakNb: 0
+             breakTime: 10
+       escapeTimeLimit: 5
+             quickMode: 2
+             inputMode: 2
+             debugMode: 2
+    breakInstructions1: [1×1 struct]
+    breakInstructions2: [1×1 struct]
+                   thx: [1×1 struct]
+               verbose: 'verboseOFF'
+              language: 'fr'
+           allowed_key: [8 5 6]
+    allowed_key_locked: [5 6]
+       current_allowed: [8 5 6]
+                  name: 'robot'
+               nameDST: 'default'
+                    nn: 85
+               results: [NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN NaN]
+               timings: [NaN NaN NaN NaN NaN NaN NaN]
+             leftContr: 0.9600
+            rightContr: 0.9600
+           leftUpShift: 0
+          rightUpShift: 0
+         leftLeftShift: 0
+        rightLeftShift: 0
+                    DE: 1
+           goalCounter: 170
+
+Scr structure: 
+                     W: 300
+                     H: 210
+          goalWidthRes: 1366
+         goalHeightRes: 768
+       goalRefreshRate: 60
+        distFromScreen: 150
+              viewpixx: 0
+           paramOptim1: 0.0062
+           paramOptim2: 1.7274
+          screenNumber: 0
+         oldResolution: [1×1 struct]
+         newResolution: [1×1 struct]
+             pixelSize: 32
+                   res: [0 0 1366 768]
+                ppBymm: 4.5533
+         VA2pxConstant: 119.2181
+              dispByPx: 30.1968
+               centerX: 683
+               centerY: 384
+              frameSep: 75
+       stereoDeviation: 341.5000
+              LcenterX: 342
+              RcenterX: 1025
+          LcenterXLine: 342
+          RcenterXLine: 1025
+           centerYLine: 384
+           LcenterXDot: 342
+           RcenterXDot: 1025
+            centerYDot: 384
+                backgr: 15
+           keyboardNum: -1
+              fontSize: 30
+                     w: 10
+             frameTime: 0.0167
+    monitorRefreshRate: 59.9917
+    maxSmoothPointSize: 20
+     antialliasingMode: 2
+               lenient: 1
+          LcenterYLine: 384
+          RcenterYLine: 384
+           LcenterYDot: 384
+           RcenterYDot: 384
+             fontColor: 0
+
+stim structure: 
+                  maxLum: 50
+                  minLum: 0
+                   flash: 1
+       fixationLengthMin: 25
+    fixationLineWidthMin: 6
+       fixationOffsetMin: 10
+      fixationDotSizeMin: 11
+                  config: 3
+               dotSizeVA: [0.5000 0.1000]
+              dotDensity: [0.1200 0.0200]
+        distBetwDots_min: 10
+                 overlap: 0
+          maxLoadingTime: 100
+               coherence: 0
+             speedVA_sec: 0.5000
+                polarity: 5
+        frameLineWidthVA: 0.3000
+         spaceFrameRdsVA: 0.1000
+              rdsWidthVA: 6.6000
+             rdsHeightVA: 2.7000
+            frameWidthVA: 6.9000
+           frameHeightVA: 8.6000
+              patterning: 1
+            itemDuration: 1.0000e-05
+           flashDuration: 1.0000e-06
+              interTrial: 1.0000e-05
+          fixationLength: 50
+       fixationLineWidth: 12
+          fixationOffset: 20
+         fixationDotSize: 22
+          frameLineWidth: 36
+                rdsWidth: 790
+               rdsHeight: 322
+              frameWidth: 828
+             frameHeight: 1034
+                   speed: 59.6045
+               ppByFlash: 23.8418
+            distBetwDots: 20
+                 dotSize: [60 12]
+           instrPosition: [0 384 828 1034]
+                   LmaxL: 29.4000
+                   LminL: 0.6000
+                   LmaxR: 29.4000
+                   LminR: 0.6000
+                    fixL: 0.6000
+                    fixR: 0.6000
+               dotColor1: 0
+               dotColor2: 50
+               dotColor3: [25 50 50]
+                   white: 50
+                    blue: [25 50 50]
+            leftFrameLum: 0.6000
+           rightFrameLum: 0.6000
+                  frameL: [-72 -133 756 901]
+                  frameR: [611 -133 1439 901]
+              centerrdsL: [1 223 737 545]
+              centerrdsR: [630 223 1420 545]
+              outerrdsL1: [1 1 737 223]
+              outerrdsR1: [630 1 1420 223]
+              outerrdsL2: [1 545 737 867]
+              outerrdsR2: [630 545 1420 867]
+
+Sounds structure: 
+      freq1: 44100
+    success: [1×5962 double]
+      freq2: 44100
+       fail: [2×220500 double]
+    handle1: 10
+    handle2: 11
+
+Psi structure: 
+                   xmin: 1
+                  xmin2: 0.1000
+                   xmax: 3000
+              gridSizeX: 50
+            disparities: [1×54 double]
+                   tmin: 1
+                  tmin2: 0.1000
+                  tmax1: 2200
+                  tmax2: 3000
+              gridSizeT: 100
+             thresholds: [1×105 double]
+                 slopes: [-0.6990 -0.5229 -0.3979 -0.2218 -0.0969 0.0792 0.2041 0.3802]
+             neg_slopes: [0 0.0030 0.0060 0.0120 0.0240 0.0560 0.1120]
+                  lapse: 0.0175
+    maxAllowerThreshold: 1300
+                      g: 0.5000
+                  delta: 0.0100
+                      p: 0.7500
+               practice: [12×1 double]
+          sim_threshold: 1000
+                    end: 0
+                  trial: 1
+      donothing_counter: 0
+
+changeResolution: We will do nothing because the current resolution is already at 1366x768
+and the current refresh rate is already 60hz
+==========================================
+         Results
+Duration:1.4
+
+ans =
+
+   1.0e+03 *
+
+    0.0010    2.5478    0.0010    0.0599    0.0007    0.0000    0.0599    0.0020   -0.0010    0.0035
+    0.0020    2.0000         0    0.0476    0.0007    0.0000    0.0476    0.0050   -0.0010    0.0035
+    0.0030    1.5605    0.0010    0.0502    0.0007    0.0000    0.0502    0.0060   -0.0010    0.0035
+    0.0040    1.3253    0.0010    0.0509    0.0007    0.0000    0.0509    0.0070   -0.0010    0.0035
+    0.0050    1.0000    0.0010    0.0485    0.0007    0.0000    0.0485    0.0090   -0.0010    0.0035
+    0.0060    0.8118    0.0010    0.0441    0.0007    0.0000    0.0441    0.0100   -0.0010    0.0035
+    0.0070    0.4972         0    0.1368    0.0007    0.0000    0.1368    0.0110   -0.0010    0.0035
+    0.0080    0.3045         0    0.4145    0.0007    0.0000    0.4145    0.0150   -0.0009    0.0035
+    0.0090    0.2114         0    0.5511    0.0007    0.0000    0.5511    0.0180   -0.0010    0.0035
+    0.0100    0.1000         0    0.8795    0.0007    0.0000    0.8795    0.0200    0.0002    0.0035
+    0.0110    0.0534         0    1.0581    0.0007    0.0000    1.0581    0.0220    0.0014    0.0035
+    0.0120    0.0276         0    1.0179    0.0007    0.0000    1.0179    0.0230    0.0016    0.0035
+    0.0130    0.0010         0    1.0100    0.0007    0.0000    1.0100    0.0240    0.0016    0.0035
+    0.0140    0.0010         0    1.0108    0.0007    0.0000    1.0108    0.0290    0.0016    0.0035
+    0.0150    0.0010         0    1.0116    0.0007    0.0000    1.0116    0.0300    0.0016    0.0035
+    0.0160    0.0010    0.0010    1.0109    0.0007    0.0000    1.0109    0.0310    0.0016    0.0035
+    0.0170    0.0010    0.0010    1.0101    0.0007    0.0000    1.0101    0.0320    0.0016    0.0035
+    0.0180    0.0010    0.0010    1.0094    0.0007    0.0000    1.0094    0.0350    0.0016    0.0035
+    0.0190    0.0010         0    1.0102    0.0007    0.0000    1.0102    0.0370    0.0016    0.0035
+    0.0200    0.0010         0    1.0109    0.0007    0.0000    1.0109    0.0380    0.0016    0.0035
+    0.0210    0.0010         0    1.0116    0.0007    0.0000    1.0116    0.0400    0.0016    0.0035
+    0.0220    0.0010         0    1.0123    0.0007    0.0000    1.0123    0.0410    0.0016    0.0035
+    0.0230    0.0010    0.0010    1.0117    0.0007    0.0000    1.0117    0.0440    0.0016    0.0035
+    0.0240    0.0010    0.0010    1.0110    0.0007    0.0000    1.0110    0.0460    0.0016    0.0035
+    0.0250    0.0010    0.0010    1.0103    0.0007    0.0000    1.0103    0.0480    0.0016    0.0035
+    0.0260    0.0010    0.0010    1.0095    0.0007    0.0000    1.0095    0.0540    0.0016    0.0035
+    0.0270    0.0010         0    1.0103    0.0007    0.0000    1.0103    0.0560    0.0016    0.0035
+    0.0280    0.0010         0    1.0111    0.0007    0.0000    1.0111    0.0580    0.0016    0.0035
+    0.0290    0.0010         0    1.0118    0.0007    0.0000    1.0118    0.0590    0.0016    0.0035
+    0.0300    0.0010         0    1.0125    0.0007    0.0000    1.0125    0.0600    0.0016    0.0035
+    0.0310    0.0010    0.0010    1.0118    0.0007    0.0000    1.0118    0.0620    0.0016    0.0035
+    0.0320    0.0010         0    1.0125    0.0007    0.0000    1.0125    0.0650    0.0016    0.0035
+    0.0330    0.0010         0    1.0131    0.0007    0.0000    1.0131    0.0670    0.0017    0.0035
+    0.0340    0.0010         0    1.0138    0.0007    0.0000    1.0138    0.0680    0.0017    0.0035
+    0.0350    0.0010    0.0010    1.0132    0.0007    0.0000    1.0132    0.0710    0.0017    0.0035
+    0.0360    0.0010         0    1.0138    0.0007    0.0000    1.0138    0.0730    0.0017    0.0035
+    0.0370    0.0010    0.0010    1.0132    0.0007    0.0000    1.0132    0.0740    0.0017    0.0035
+    0.0380    0.0010    0.0010    1.0126    0.0007    0.0000    1.0126    0.0760    0.0016    0.0035
+    0.0390    0.0010         0    1.0132    0.0007    0.0000    1.0132    0.0770    0.0017    0.0035
+    0.0400    0.0010    0.0010    1.0126    0.0007    0.0000    1.0126    0.0790    0.0016    0.0035
+    0.0410    0.0010         0    1.0132    0.0007    0.0000    1.0132    0.0810    0.0017    0.0035
+    0.0420    0.0010    0.0010    1.0126    0.0007    0.0000    1.0126    0.0820    0.0016    0.0035
+    0.0430    0.0010    0.0010    1.0120    0.0007    0.0000    1.0120    0.0830    0.0016    0.0035
+    0.0440    0.0010         0    1.0126    0.0007    0.0000    1.0126    0.0850    0.0016    0.0035
+    0.0450    0.0010    0.0010    1.0120    0.0007    0.0000    1.0120    0.0900    0.0016    0.0035
+    0.0460    0.0010         0    1.0127    0.0007    0.0000    1.0127    0.0910    0.0016    0.0035
+    0.0470    0.0010         0    1.0133    0.0007    0.0000    1.0133    0.0920    0.0017    0.0035
+    0.0480    0.0010         0    1.0139    0.0007    0.0000    1.0139    0.0930    0.0017    0.0035
+    0.0490    0.0010    0.0010    1.0133    0.0007    0.0000    1.0133    0.0940    0.0017    0.0035
+    0.0500    0.0010         0    1.0139    0.0007    0.0000    1.0139    0.0970    0.0017    0.0035
+    0.0510    0.0010    0.0010    1.0134    0.0007    0.0000    1.0134    0.0980    0.0017    0.0035
+    0.0520    0.0010         0    1.0140    0.0007    0.0000    1.0140    0.0990    0.0017    0.0035
+    0.0530    0.0010    0.0010    1.0134    0.0007    0.0000    1.0134    0.1000    0.0017    0.0035
+    0.0540    0.0010         0    1.0140    0.0007    0.0000    1.0140    0.1010    0.0017    0.0035
+    0.0550    0.0010         0    1.0146    0.0007    0.0000    1.0146    0.1050    0.0017    0.0035
+    0.0560    0.0010         0    1.0151    0.0007    0.0000    1.0151    0.1080    0.0017    0.0035
+    0.0570    0.0010         0    1.0157    0.0007    0.0000    1.0157    0.1100    0.0017    0.0035
+    0.0580    0.0010    0.0010    1.0152    0.0007    0.0000    1.0152    0.1120    0.0017    0.0035
+    0.0590    0.0010         0    1.0157    0.0007    0.0000    1.0157    0.1130    0.0017    0.0035
+    0.0600    0.0010         0    1.0162    0.0007    0.0000    1.0162    0.1160    0.0017    0.0035
+    0.0610    0.0010    0.0010    1.0157    0.0007    0.0000    1.0157    0.1200    0.0017    0.0035
+    0.0620    0.0010    0.0010    1.0152    0.0007    0.0000    1.0152    0.1210    0.0017    0.0035
+    0.0630    0.0010    0.0010    1.0147    0.0007    0.0000    1.0147    0.1220    0.0017    0.0035
+    0.0640    0.0010         0    1.0152    0.0007    0.0000    1.0152    0.1230    0.0017    0.0035
+    0.0650    0.0010    0.0010    1.0147    0.0007    0.0000    1.0147    0.1250    0.0017    0.0035
+    0.0660    0.0010    0.0010    1.0141    0.0007    0.0000    1.0141    0.1260    0.0017    0.0035
+    0.0670    0.0010    0.0010    1.0135    0.0007    0.0000    1.0135    0.1280    0.0017    0.0035
+    0.0680    0.0010    0.0010    1.0129    0.0007    0.0000    1.0129    0.1320    0.0017    0.0035
+    0.0690    0.0010         0    1.0136    0.0007    0.0000    1.0136    0.1330    0.0017    0.0035
+    0.0700    0.0010         0    1.0142    0.0007    0.0000    1.0142    0.1350    0.0017    0.0035
+    0.0710    0.0010    0.0010    1.0136    0.0007    0.0000    1.0136    0.1360    0.0017    0.0035
+    0.0720    0.0010    0.0010    1.0130    0.0007    0.0000    1.0130    0.1370    0.0017    0.0035
+    0.0730    0.0010         0    1.0136    0.0007    0.0000    1.0136    0.1430    0.0017    0.0035
+    0.0740    0.0010    0.0010    1.0130    0.0007    0.0000    1.0130    0.1440    0.0017    0.0035
+    0.0750    0.0010    0.0010    1.0124    0.0007    0.0000    1.0124    0.1450    0.0016    0.0035
+    0.0760    0.0010    0.0010    1.0118    0.0007    0.0000    1.0118    0.1460    0.0016    0.0035
+    0.0770    0.0010    0.0010    1.0111    0.0007    0.0000    1.0111    0.1500    0.0016    0.0035
+    0.0780    0.0010    0.0010    1.0104    0.0007    0.0000    1.0104    0.1510    0.0016    0.0035
+    0.0790    0.0010         0    1.0111    0.0007    0.0000    1.0111    0.1520    0.0016    0.0035
+    0.0800    0.0010    0.0010    1.0104    0.0007    0.0000    1.0104    0.1530    0.0016    0.0035
+    0.0810    0.0010    0.0010    1.0097    0.0007    0.0000    1.0097    0.1550    0.0016    0.0035
+    0.0820    0.0010    0.0010    1.0090    0.0007    0.0000    1.0090    0.1560    0.0016    0.0035
+    0.0830    0.0010         0    1.0098    0.0007    0.0000    1.0098    0.1610    0.0016    0.0035
+    0.0840    0.0010         0    1.0105    0.0007    0.0000    1.0105    0.1630    0.0016    0.0035
+    0.0850    0.0010    0.0010    1.0098    0.0007    0.0000    1.0098    0.1660    0.0016    0.0035
+
+  <a href="matlab:helpPopup MException" style="font-weight:bold">MException</a> with properties:
+
+    identifier: 'MATLAB:UndefinedFunction'
+       message: 'Undefined function or variable 'xxx'.'
+         cause: {}
+         stack: [2×1 struct]
+
+changeResolution: We will do nothing because the current resolution is already at 1366x768
+and the current refresh rate is already 60hz

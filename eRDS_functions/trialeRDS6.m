@@ -20,7 +20,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
         expe.lastBreakTime=GetSecs; %time from the last break
     end
     % find out what is the next disparity
-    psi = Psi_marg_erds6('value',trial, psi, expe, scr);
+    psi = Psi_marg6_erds6('value',trial, psi, expe, scr);
                                    
    expected_side = round(rand(1)); % 0: left/center side closer - 1: right/outer side closer
    if strcmp(psi.sign, 'near')
@@ -495,7 +495,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
         end
         
 %         % ---- TIMING CHECKS ---%
-         dispi('Average frame duration (ms): ',   nanmean(timetable).*1000)
+%         dispi('Average frame duration (ms): ',   nanmean(timetable).*1000)
 
         % clear stimulus space   
         %--- Background
@@ -527,7 +527,7 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
             %--------------------------------------------------------------------------
             %   GET RESPONSE if no response at that stage
             %--------------------------------------------------------------------------
-               % NOTE THAT ROBOTMODEERDS IS USELESS GIVEN PSI USES ITS OWN SIMULATION IMPLEMENTATION (see Psi_marg_erds6.m)    
+               % NOTE THAT ROBOTMODEERDS IS USELESS GIVEN PSI USES ITS OWN SIMULATION IMPLEMENTATION (see Psi_marg6_erds6.m)    
                [responseKey, RT]=getResponseKb(scr.keyboardNum,0,expe.inputMode,expe.allowed_key,'robotModeERDS',[L_R_disp(1) L_R_disp(2) 100 800],1,0,0,0); %robotmode takes the 2 pedestal+disparity, the simulated threshold and the Panum area limit (all in arcsec)
           end
 
@@ -622,10 +622,10 @@ function [expe, psi, stopSignal]=trialeRDS6(trial,stim,scr,expe,sounds,psi)
      % removed doublon from framelist and count
       frameList = logic('union', frameList,[]);
       nbFrameShown = numel(frameList);
-      dispi('Average stimulus duration (ms): ',1000*expe.stimTime/nbFrameShown)
+    %  dispi('Average stimulus duration (ms): ',1000*expe.stimTime/nbFrameShown)
       
      % update and record psi data
-      psi = Psi_marg_erds6('record',trial, psi, expe, scr);
+      psi = Psi_marg6_erds6('record',trial, psi, expe, scr);
 
         % -----------   SAVING DATA ------------------%
            if stopSignal==1
