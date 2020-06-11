@@ -1,5 +1,5 @@
 function psi = Psi_marg6_erds6(action, trialID, psi, expe, scr)
-% Psi algorithm for working with erds files, following version 003k of Psi_marg6
+% Psi algorithm for working with erds files, following version 003o of Psi_marg6
 % 
 % This code implements a parametrized Bayesian estimation (Psi, Kontsevich & Tyler, 1999) that can work in spaces of 
 % more than one parameter (simultaneously), thanks to entropy minimization. It means that it calculates the stimulus 
