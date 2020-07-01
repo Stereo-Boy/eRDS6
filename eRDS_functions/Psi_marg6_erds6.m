@@ -198,13 +198,14 @@ elseif strcmp(action,'record') % and update
       % ------------- LAST TRIAL ---------------------
         if psi.trial==expe.nn
             % threshold capping at 1300"                                     
-            psi.threshold=min(psi.maxAllowerThreshold,psi.thr_sum);
+            %psi.threshold=min(psi.maxAllowerThreshold,psi.thr_sum);
+            psi.threshold=psi.thr_sum;
             %marginalize distributions for stereoblindness calculation
             psi.marg_thr=squeeze(sum(sum(psi.prior(:,:,:,1),3),2));
             psi.stereoblind_prob = 100*sum(psi.marg_thr((10.^psi.thresholds)>=psi.maxAllowerThreshold));
-            if  psi.stereoblind_prob>50
-                 psi.threshold=psi.maxAllowerThreshold;
-            end
+%             if  psi.stereoblind_prob>50
+%                  psi.threshold=psi.maxAllowerThreshold;
+%             end
             psi.end = 1;
         else
             % update trial number
@@ -284,14 +285,12 @@ end
 catch err   %===== DEBUGING =====%
     sca
     ShowHideWinTaskbarMex
-    keyboard
     disp(err)
     %save(fullfile(pathExp,'log',[expe.file,'-crashlog']))
     %saveAll(fullfile(pathExp,'log',[expe.file,'-crashlog.mat']),fullfile(pathExp,'log',[expe.file,'-crashlog.txt']))
     if exist('scr','var');     changeResolution(scr.screenNumber, scr.oldResolution.width, scr.oldResolution.height, scr.oldResolution.hz); end
     diary OFF
     if exist('scr','var'); precautions(scr.w, 'off'); end
-    keyboard
     rethrow(err);
 end
 

@@ -1,0 +1,76 @@
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\DST8\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\screen
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\sound
+Date and Time:	 1/ 7/2020	22:42:38
+------------------------------------
+Experimental Menu (choose an option)
+====================================
+1: Quick Mode
+2: Manual Mode (not implemented yet)
+3: Practice 2000 ms - 2 x 5 trials
+4: Test 2000 ms - 2 x 12 practice + 73 trials
+5: Test 200 ms - 2 x 12 practice + 73 trials
+6: Debug mode (not implemented yet)
+7: Robot mode
+8: Checking mode
+9: Exit
+====================================
+Your option? 7
+changeResolution: We will do nothing because the current resolution is already at 1366x768
+and the current refresh rate is already 60hz
+[Warning: Ratio error >5%: change the screen resolution to have equal pixel sizes.] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parametersERDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m', 64)" style="font-weight:bold">parametersERDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',64,0)">line 64</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eRDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6.m', 113)" style="font-weight:bold">eRDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6.m',113,0)">line 113</a>)] 
+
+
+PTB-INFO: This is Psychtoolbox-3 for Microsoft Windows, under Matlab 64-Bit (Version 3.0.16 - Build date: Apr 25 2020).
+PTB-INFO: OS support status: Windows 10 (Version 10.0) supported and tested to some limited degree.
+PTB-INFO: Type 'PsychtoolboxVersion' for more detailed version information.
+PTB-INFO: Most parts of the Psychtoolbox distribution are licensed to you under terms of the MIT License, with
+PTB-INFO: some restrictions. See file 'License.txt' in the Psychtoolbox root folder for the exact licensing conditions.
+
+PTB-INFO: The detected endline of the vertical blank interval is equal or lower than the startline. This indicates
+PTB-INFO: that i couldn't detect the duration of the vertical blank interval and won't be able to correct timestamps
+PTB-INFO: for it. This will introduce a very small and constant offset (typically << 1 msec). Read 'help BeampositionQueries'
+PTB-INFO: for how to correct this, should you really require that last few microseconds of precision.
+PTB-INFO: Btw. this can also mean that your systems beamposition queries are slightly broken. It may help timing precision to
+PTB-INFO: enable the beamposition workaround, as explained in 'help ConserveVRAMSettings', section 'kPsychUseBeampositionQueryWorkaround'.
+
+
+PTB-INFO: OpenGL-Renderer is Intel :: Intel(R) UHD Graphics 620 :: 4.6.0 - Build 26.20.100.7262
+PTB-INFO: VBL startline = 768 , VBL Endline = 768
+PTB-INFO: Measured monitor refresh interval from beamposition = 16.664996 ms [60.006015 Hz].
+PTB-INFO: Will use beamposition query for accurate Flip time stamping.
+PTB-INFO: Measured monitor refresh interval from VBLsync = 16.666058 ms [60.002191 Hz]. (50 valid samples taken, stddev=0.237052 ms.)
+PTB-INFO: Reported monitor refresh interval from operating system = 16.666667 ms [60.000000 Hz].
+PTB-INFO: Small deviations between reported values are normal and no reason to worry.
+PTB-WARNING: Could not enable Anti-Aliasing as requested. Your hardware does not support this feature!
+PTB-INFO: ==============================================================================================================================
+PTB-INFO: WINDOWS DWM DESKTOP COMPOSITOR IS ACTIVE. On this Windows-10 or later system, Psychtoolbox can no longer reliably detect if
+PTB-INFO: this will cause trouble for timing and integrity of visual stimuli or not. You might be just fine, or you could be in trouble.
+PTB-INFO: Use external measurement equipment and independent procedures to verify reliability of timing if you care about proper timing.
+PTB-INFO: ==============================================================================================================================
+
+WARNING: Couldn't compute a reliable estimate of monitor refresh interval! Trouble with VBL syncing?!?
+
+
+----- ! PTB - ERROR: SYNCHRONIZATION FAILURE ! -----
+
+One or more internal checks (see Warnings above) indicate that synchronization
+of Psychtoolbox to the vertical retrace (VBL) is not working on your setup.
+
+This will seriously impair proper stimulus presentation and stimulus presentation timing!
+Please read 'help SyncTrouble' for information about how to solve or work-around the problem.
+You can force Psychtoolbox to continue, despite the severe problems, by adding the command
+Screen('Preference', 'SkipSyncTests', 1); at the top of your script, if you really know what you are doing.
+
+
+  <a href="matlab:helpPopup MException" style="font-weight:bold">MException</a> with properties:
+
+    identifier: ''
+       message: 'See error message printed above.'
+         cause: {0×1 cell}
+         stack: [2×1 struct]
+
