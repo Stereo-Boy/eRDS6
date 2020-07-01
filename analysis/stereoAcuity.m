@@ -24,8 +24,8 @@ dispi('    ',psi1.sign,' disparities');
 disp('-------------------------------------------------------');
 dispi('Final threshold: ',round(psi1.threshold,1),' arcsec');
 dispi('Probability to be ',psi1.sign,'-stereoblind: ',sprintf('%.0f%%',psi1.stereoblind_prob));
-if  round(psi1.threshold,1)>1150 && round(psi1.threshold,1)<1368
-    dispi('NB: threshold is in uncertainty area: [1150" - 1368"]');
+if  round(psi1.threshold,1)>1153 && round(psi1.threshold,1)<1373
+    dispi('NB: threshold is in uncertainty area: [1153" - 1373"]');
 end
 disp(' ');
 plotIt(psi2,expe);
