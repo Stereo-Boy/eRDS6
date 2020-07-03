@@ -5,8 +5,8 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
     
     %set the randomness random
     try rng('shuffle'); catch; rand('twister', sum(100*clock)); end
-    Screen('Preference', 'SkipSyncTests', 1); % HERE CHANGE TO 0!!!
-    warning('change line 8 to 0')
+    Screen('Preference', 'SkipSyncTests', 0); % HERE CHANGE TO 0!!!
+    %warning('change line 8 to 0')
     AssertOpenGL; %?
 
     %--------------------------------------------------------------------------
