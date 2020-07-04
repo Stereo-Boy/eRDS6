@@ -107,7 +107,7 @@ if strcmp(action,'value')
            [~,psi.idx] = min(ExpEntropy);
            candidate_disp = psi.disparities(psi.idx);
            if candidate_disp>log10(psi.xmax) % cannot present above that disparity
-               [~, psi.idx2] =  min(abs(candidate_disp-log10(psi.xmax)));
+               [~, psi.idx2] =  min(abs(psi.disparities-log10(psi.xmax)));
                psi.current_disp = psi.disparities(psi.idx2);
            else
                psi.current_disp = candidate_disp;
