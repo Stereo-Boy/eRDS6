@@ -1,0 +1,88 @@
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\DST8\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\dataFiles
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\screen
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\sound
+Date and Time:	28/ 2/2020	15:57: 5
+------------------------------------
+Experimental Menu (choose an option)
+====================================
+1: Quick Mode
+2: Manual Mode (not implemented yet)
+3: Practice 2000 ms - 10 trials
+4: Test 2000 ms - 25 practice + 60 trials
+5: Test 200 ms - 25 practice + 60 trials
+6: Debug mode (not implemented yet)
+7: Robot mode
+====================================
+Your option? 1
+[Warning: SkipSyncTests: change line 8 to 0] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('warni', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\warni.m', 23)" style="font-weight:bold">warni</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\warni.m',23,0)">line 23</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parametersERDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m', 9)" style="font-weight:bold">parametersERDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',9,0)">line 9</a>)
+  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eRDS6b', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m', 110)" style="font-weight:bold">eRDS6b</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m',110,0)">line 110</a>)] 
+Resolution and refresh are correct
+
+Ideally, change the screen resolution to have equal pixel sizes. Otherwise, vertical sizes will be incorrect.
+
+
+
+PTB-INFO: This is Psychtoolbox-3 for Microsoft Windows, under Matlab 64-Bit (Version 3.0.16 - Build date: Aug  7 2019).
+PTB-INFO: OS support status: Windows 10 (Version 10.0) supported and tested to some limited degree.
+PTB-INFO: Type 'PsychtoolboxVersion' for more detailed version information.
+PTB-INFO: Most parts of the Psychtoolbox distribution are licensed to you under terms of the MIT License, with
+PTB-INFO: some restrictions. See file 'License.txt' in the Psychtoolbox root folder for the exact licensing conditions.
+
+
+
+PTB-INFO: OpenGL-Renderer is Intel :: Intel(R) UHD Graphics 620 :: 4.6.0 - Build 26.20.100.7262
+PTB-INFO: VBL startline = 1080 , VBL Endline = -1
+PTB-INFO: Beamposition queries unsupported or defective on this system. Using basic timestamping as fallback.
+PTB-INFO: Timestamps returned by Screen('Flip') will be therefore less robust and accurate.
+PTB-INFO: Measured monitor refresh interval from VBLsync = 0.000000 ms [1.#INF00 Hz]. (0 valid samples taken, stddev=0.000000 ms.)
+PTB-INFO: Reported monitor refresh interval from operating system = 16.666667 ms [60.000000 Hz].
+PTB-INFO: Small deviations between reported values are normal and no reason to worry.
+PTB-WARNING: Could not enable Anti-Aliasing as requested. Your hardware does not support this feature!
+PTB-INFO: ==============================================================================================================================
+PTB-INFO: WINDOWS DWM DESKTOP COMPOSITOR IS ACTIVE. On this Windows-10 or later system, Psychtoolbox can no longer reliably detect if
+PTB-INFO: this will cause trouble for timing and integrity of visual stimuli or not. You might be just fine, or you could be in trouble.
+PTB-INFO: Use external measurement equipment and independent procedures to verify reliability of timing if you care about proper timing.
+PTB-INFO: ==============================================================================================================================
+PTB-INFO: All display tests and calibrations disabled. Assuming a refresh interval of 60.000000 Hz. Timing will be inaccurate!
+Correcting: stim.dotSize should be even - removing 1pp
+PTB-INFO: New audio device -1 with handle 2 opened as PortAudio stream:
+PTB-INFO: For 2 channels Playback: Audio subsystem is MME, Audio device name is Speakers/Headphones (Realtek(R)
+PTB-INFO: Real samplerate 11025.000000 Hz. Input latency 0.000000 msecs, Output latency 182.857143 msecs.
+PTB-INFO: New audio device -1 with handle 3 opened as PortAudio stream:
+PTB-INFO: For 2 channels Playback: Audio subsystem is MME, Audio device name is Speakers/Headphones (Realtek(R)
+PTB-INFO: Real samplerate 44100.000000 Hz. Input latency 0.000000 msecs, Output latency 180.317460 msecs.
+PTB-ERROR: Audio device 2 has 2 output channels, but provided matrix has non-matching number of 5773 rows.
+Error in function FillBuffer: 	Usage error
+Number of rows of audio data matrix doesn't match number of output channels of selected audio device.
+
+
+
+WARNING: This session of your experiment was run by you with the setting Screen('Preference', 'SkipSyncTests', 2).
+WARNING: This means that some internal self-tests and calibrations were skipped. Your stimulus presentation timing
+WARNING: may have been wrong. This is fine for development and debugging of your experiment, but for running the real
+WARNING: study, please make sure to set Screen('Preference', 'SkipSyncTests', 0) for maximum accuracy and reliability.
+rethrow(err)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('PsychPortAudio')" style="font-weight:bold">PsychPortAudio</a>
+Usage:
+
+[underflow, nextSampleStartIndex, nextSampleETASecs] = PsychPortAudio('FillBuffer', pahandle, bufferdata [, streamingrefill=0][, startIndex=Append]);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parametersERDS6', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m', 220)" style="font-weight:bold">parametersERDS6</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',220,0)">line 220</a>)
+        PsychPortAudio('FillBuffer', sounds.handle1, sounds.success);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eRDS6b', 'C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m', 110)" style="font-weight:bold">eRDS6b</a> (<a href="matlab: opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS6b.m',110,0)">line 110</a>)
+    [expe,scr,stim,sounds,psi]=parametersERDS6(expe)
+} 
+opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',220,0)
+sounds.success
+{Undefined variable "sounds" or class "sounds.success".
+} 
+opentoline('C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\eRDS_functions\parametersERDS6.m',220,0)
+if system_dependent('IsDebugMode')==1, dbquit; end
+eRDS6b
+ ------------    eRDS ------------------
+[check_folder] confirms that the following folder exists: C:\Users\Adrian\Google Drive\recherches partiel\2019_ASM_Accurate_Stereoacuity_Measure\eRDS6\log

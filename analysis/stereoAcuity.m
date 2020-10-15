@@ -24,13 +24,14 @@ disp('-------------------------------------------------------');
 plotIt(psi1,expe);
 dispi('Raw threshold: ',round(psi1.threshold,1),' arcsec');
 psi1.final_threshold=round(min(psi1.maxAllowerThreshold,psi1.threshold),1);
-if  psi1.stereoblind_prob>50
-    psi1.final_threshold=psi1.maxAllowerThreshold;
-end
+% if  psi1.stereoblind_prob>50
+%     psi1.final_threshold=psi1.maxAllowerThreshold;
+% end
 dispi('Final threshold: ',psi1.final_threshold,' arcsec');
-dispi('Probability to be ',psi1.sign,'-stereoblind: ',sprintf('%.0f%%',psi1.stereoblind_prob));
-if  round(psi1.threshold,1)>1153 && round(psi1.threshold,1)<1373
-    dispi('NB: threshold is in uncertainty area: [1153" - 1373"]');
+if psi1.final_threshold==psi1.maxAllowerThreshold; dispi('Participant is ',psi1.sign,'-stereoblind'); end
+dispi('Marginal probability to be ',psi1.sign,'-stereoblind: ',sprintf('%.0f%%',psi1.stereoblind_prob));
+if  round(psi1.threshold,1)>1348 && round(psi1.threshold,1)<1413
+    dispi('NB: threshold is in uncertainty area: [1348" - 1413"] - we cannot be sure whether participant is stereoblind or not.');
 end
 disp(' ');
 disp('-------------------------------------------------------');
@@ -39,13 +40,14 @@ disp('-------------------------------------------------------');
 plotIt(psi2,expe);
 dispi('Raw threshold: ',round(psi2.threshold,1),' arcsec');
 psi2.final_threshold=round(min(psi2.maxAllowerThreshold,psi2.threshold),1);
-if  psi2.stereoblind_prob>50
-    psi2.final_threshold=psi2.maxAllowerThreshold;
-end
+% if  psi2.stereoblind_prob>50
+%     psi2.final_threshold=psi2.maxAllowerThreshold;
+% end
 dispi('Final threshold: ',psi2.final_threshold,' arcsec');
-dispi('Probability to be ',psi2.sign,'-stereoblind: ',sprintf('%.0f%%',psi2.stereoblind_prob))   ; 
-if  round(psi2.threshold,1)>1153 && round(psi2.threshold,1)<1373
-    dispi('NB: threshold is in uncertainty area: [1153" - 1373"]');
+if psi2.final_threshold==psi2.maxAllowerThreshold; dispi('Participant is ',psi2.sign,'-stereoblind'); end
+dispi('Marginal probability to be ',psi2.sign,'-stereoblind: ',sprintf('%.0f%%',psi2.stereoblind_prob))   ; 
+if  round(psi2.threshold,1)>1348 && round(psi2.threshold,1)<1413
+    dispi('NB: threshold is in uncertainty area: [1348" - 1413"] - we cannot be sure whether participant is stereoblind or not.');
 end
 disp(' ')
 end

@@ -259,7 +259,7 @@ function [expe,scr,stim,sounds, psi]=parametersERDS6(expe)
         psi.neg_slopes = [0,0.003,0.006,0.012,0.024,0.056,0.112];
 
         psi.lapse = 0.035/2; % we assumed a fixed lapse (finger error) rate (in %)
-        psi.maxAllowerThreshold=1300; % threshold considered stereoblindness
+        psi.maxAllowerThreshold=1413; % threshold considered stereoblindness
         psi.g = 0.5; %guess rate (we have one chance out of 2 - 2AFC)
         psi.delta = 0.01; %what part of the psychometric function is considered ([delta, 1-delta]
         psi.p = 0.75; %success rate at threshold
