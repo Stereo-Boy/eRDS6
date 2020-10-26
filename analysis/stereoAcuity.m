@@ -10,6 +10,7 @@ function stereoAcuity(file)
 %   7      final 75% threshold estimate using sum parameters
 %   8       trial # (different from psi.trial)
 
+close all;
 [eRDSpath,~]=fileparts(fileparts(mfilename('fullpath'))); %path to erds folder
 [~,filename,ext] = fileparts(file); 
 if isempty(ext); ext='.mat'; end
@@ -28,11 +29,12 @@ psi1.final_threshold=round(min(psi1.maxAllowerThreshold,psi1.threshold),1);
 %     psi1.final_threshold=psi1.maxAllowerThreshold;
 % end
 dispi('Final threshold: ',psi1.final_threshold,' arcsec');
-if psi1.final_threshold==psi1.maxAllowerThreshold; dispi('Participant is ',psi1.sign,'-stereoblind'); end
+if psi1.final_threshold>=psi1.maxAllowerThreshold; dispi('Participant is ',psi1.sign,'-stereoblind'); end
 dispi('Marginal probability to be ',psi1.sign,'-stereoblind: ',sprintf('%.0f%%',psi1.stereoblind_prob));
 if  round(psi1.threshold,1)>1348 && round(psi1.threshold,1)<1413
     dispi('NB: threshold is in uncertainty area: [1348" - 1413"] - we cannot be sure whether participant is stereoblind or not.');
 end
+
 disp(' ');
 disp('-------------------------------------------------------');
 dispi('    ',psi2.sign,' disparities');
@@ -44,12 +46,53 @@ psi2.final_threshold=round(min(psi2.maxAllowerThreshold,psi2.threshold),1);
 %     psi2.final_threshold=psi2.maxAllowerThreshold;
 % end
 dispi('Final threshold: ',psi2.final_threshold,' arcsec');
-if psi2.final_threshold==psi2.maxAllowerThreshold; dispi('Participant is ',psi2.sign,'-stereoblind'); end
+if psi2.final_threshold>=psi2.maxAllowerThreshold; dispi('Participant is ',psi2.sign,'-stereoblind'); end
 dispi('Marginal probability to be ',psi2.sign,'-stereoblind: ',sprintf('%.0f%%',psi2.stereoblind_prob))   ; 
 if  round(psi2.threshold,1)>1348 && round(psi2.threshold,1)<1413
     dispi('NB: threshold is in uncertainty area: [1348" - 1413"] - we cannot be sure whether participant is stereoblind or not.');
 end
 disp(' ')
+
+disp('-------------------------------------------------------');
+dispi('    composite threshold');
+disp('-------------------------------------------------------');
+psi = recomputeFromData(psi1, psi2);
+psi.final_threshold=round(min(psi.maxAllowerThreshold,psi.threshold),1);
+dispi('Final threshold: ',psi.final_threshold,' arcsec');
+if psi.final_threshold>=psi.maxAllowerThreshold; dispi('Participant is likely stereoblind'); end
+dispi('Marginal probability to be stereoblind: ',sprintf('%.0f%%',psi.stereoblind_prob))   ; 
+figure('Color', 'w','OuterPosition',[0 0 6000 6000])
+        hold on
+        psi1.curr_est_sum_thr = psi1.history(end,4);
+        psi1.curr_est_sum_pos_slo = psi1.history(end,5);
+        psi1.curr_est_sum_neg_slo = psi1.history(end,6);
+        psi1.shown_disp = psi1.history(:,2);
+        psi1.correct_resp = psi1.history(:,3);
+        plot(10.^psi1.disparities, defineLikelihood_bell(psi1.g, psi1.curr_est_sum_neg_slo, psi1.curr_est_sum_pos_slo, psi1.delta, psi1.p, psi1.disparities, log10(psi1.threshold), psi1.lapse),'-b')
+        plot([psi1.threshold psi1.threshold],[0 1],'b--')
+        axis([10.^min(psi.disparities), 10.^max(psi.disparities(1:end-1)), psi.g-0.1, 1])
+        xlabel('Disparity (arcsec)')
+        title('Psychometric function: near, far disparities and composite')
+        ylabel('% CR')
+        output = makeLevelEqualBoundsMean([psi1.shown_disp,psi1.correct_resp],ceil(psi1.trial/15));    
+        scatter(output(:,1),output(:,2),output(:,3).*7,'ob');
+        xticks([1 10 20 50 100 200 500 1000 2000]);
+        xticklabels({'1' '10' '20' '50' '100' '200' '500' '1000' '2000'});
+        psi2.curr_est_sum_thr = psi2.history(end,4);
+        psi2.curr_est_sum_pos_slo = psi2.history(end,5);
+        psi2.curr_est_sum_neg_slo = psi2.history(end,6);
+        psi2.shown_disp = psi2.history(:,2);
+        psi2.correct_resp = psi2.history(:,3);
+        plot(10.^psi2.disparities, defineLikelihood_bell(psi2.g, psi2.curr_est_sum_neg_slo, psi2.curr_est_sum_pos_slo, psi2.delta, psi2.p, psi2.disparities, log10(psi2.threshold), psi2.lapse),'-r')
+        plot([psi2.threshold psi2.threshold],[0 1],'r--')
+        output = makeLevelEqualBoundsMean([psi2.shown_disp,psi2.correct_resp],ceil(psi2.trial/15));    
+        scatter(output(:,1),output(:,2),output(:,3).*7,'or');
+        psi.shown_disp = psi.history(:,2);
+        psi.correct_resp = psi.history(:,3);
+        plot(10.^psi.disparities, defineLikelihood_bell(psi.g, psi.curr_est_sum_neg_slo, psi.curr_est_sum_pos_slo, psi.delta, psi.p, psi.disparities, log10(psi.threshold), psi.lapse),'-k')
+        plot([psi.threshold psi.threshold],[0 1],'k--')
+        output = makeLevelEqualBoundsMean([psi.shown_disp,psi.correct_resp],ceil(psi.trial/15));    
+        scatter(output(:,1),output(:,2),output(:,3).*7,'ok');
 end
 
 function plotIt(psi,expe)
@@ -63,7 +106,7 @@ function plotIt(psi,expe)
         range1_history = psi.history(:,9);
         range2_history = psi.history(:,10);
         dispi('Proportion of rescaling: ',round(100*(1-psi.donothing_counter/size(psi.history,1))),'%')
-        figure('OuterPosition',[0 0 10000 10000]);
+        figure('OuterPosition',[0 0 6000 6000],'Color', 'w');
         %marginalize distributions for plotting
         marg_thr=squeeze(sum(sum(psi.prior(:,:,:,1),3),2));
         marg_slo=squeeze(sum(sum(psi.prior(:,:,:,1),3),1));
@@ -146,3 +189,19 @@ function plotIt(psi,expe)
        saveas(gcf,fullfile(expe.eRDSpath,'figures', [expe.filename,'_',psi.sign,'.png']));
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
