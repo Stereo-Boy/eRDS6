@@ -78,6 +78,7 @@ figure('Color', 'w','OuterPosition',[0 0 6000 6000])
         scatter(output(:,1),output(:,2),output(:,3).*7,'ob');
         xticks([1 10 20 50 100 200 500 1000 2000]);
         xticklabels({'1' '10' '20' '50' '100' '200' '500' '1000' '2000'});
+        set(gca, 'XScale', 'log');
         psi2.curr_est_sum_thr = psi2.history(end,4);
         psi2.curr_est_sum_pos_slo = psi2.history(end,5);
         psi2.curr_est_sum_neg_slo = psi2.history(end,6);
