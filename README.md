@@ -5,7 +5,8 @@
 
 ##What is eRDS?
 eRDS (version 6) is a program to precisely measure stereoscopic vision performance using recommendations from 
-Chopin et al., 2019, OPO & Scientific Reports. Indeed, it uses a dynamic RDS to prevent monocular cues and a
+Chopin et al., 2019, OPO (https://doi.org/10.1111/opo.12607) & Scientific Reports (https://www.nature.com/articles/s41598-019-42149-2). 
+Indeed, it uses a dynamic RDS to prevent monocular cues and a
 depth ordering task rather than an oddball to avoid binocular non-stereo cues. It is a depth detection task, 
 and it issues a threshold separately for crossed (close) and uncrossed (far) disparities.
 Short presentations (200ms) allows to separate for these two measures (otherwise eye movements can inverse the 
@@ -20,6 +21,10 @@ Prins (2013) and implement the adaptive searchgrid rescaling from Doire et al. (
 Prior is uniform but estimated from 12 practice trials, and we recommend to first run 10 additionnal practice trials 
 (that will be discarded).
 The program involves to first run the DST test to calibrate the stereoscope appropriately and ensure fusion.
+
+eRDS v6 was tested for validity, learning and test-retest in Denkinger et al., 2023 (https://doi.org/10.1167/tvst.12.3.1). 
+It showed good validity and test-retest but learning occurred between first and third session (likely linked to the use of a stereoscope) 
+so that we recommended to use T3 as a baseline. I (Adrien Chopin) recommend to use T2 if you are only interested in stereopsis as a indiviudal trait.
 
 ##What do I first need to do to install the program and material?
 The function needs the DST8 program (https://github.com/Stereo-Boy/DST8.git) and the Psychtoolbox and the programs
